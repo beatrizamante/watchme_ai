@@ -1,6 +1,0 @@
-train: src/dataset/yolo/images/train
-val: src/dataset/yolo/images/val
-
-nc: 1
-
-names: ['']
