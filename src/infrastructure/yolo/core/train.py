@@ -1,5 +1,5 @@
-from src.infrastructure.yolo.client.client import yolo_client
 from config import settings
+from ..client.client import yolo_client
 
 ##Kerasturner
 
