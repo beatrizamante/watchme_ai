@@ -5,7 +5,7 @@ def train():
     results = yolo_client.train(
         data="src/dataset/yolo/dataset.yml",
         epochs=settings.YOLO_EPOCHS,
-        batch=settings.YOLO_IMAGE_SIZE,
+        batch=settings.YOLO_BATCH_SIZE,
         optimizer=settings.YOLO_LOSS_FUNC,
         lr0=settings.YOLO_LEARNING_RATE,
         dropout=settings.YOLO_DROPOUT,
