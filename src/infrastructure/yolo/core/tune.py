@@ -20,7 +20,7 @@ def tune(weights=None):
     tuner = kt.Hyperband(
         model_builder,
         objective=kt.Objective("map50_95", direction="max"),
-        max_epochs=100,
+        max_epochs=150,
         factor=3,
         directory="kt_tuning",
         project_name="yolo_person"

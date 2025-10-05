@@ -1,5 +1,6 @@
 from config import settings
-from ultralytics import YOLO
+from ..client.model import yolo_client
+
 
 def train(weights=None, hp=None):
     epochs = hp.get("epochs", settings.YOLO_EPOCHS) if hp else settings.YOLO_EPOCHS
@@ -8,7 +9,7 @@ def train(weights=None, hp=None):
     lr0 = hp.get("lr0", settings.YOLO_LEARNING_RATE) if hp else settings.YOLO_LEARNING_RATE
     dropout = hp.get("dropout", settings.YOLO_DROPOUT) if hp else settings.YOLO_DROPOUT
 
-    model = YOLO(weights if weights else settings.YOLO_MODEL_PATH)
+    model = yolo_client(weights if weights else settings.YOLO_MODEL_PATH)
     
     results = model.train(
         data="src/dataset/yolo/dataset.yml",
