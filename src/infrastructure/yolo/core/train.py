@@ -14,10 +14,11 @@ def train(weights=None, hp=None):
     results = model.train(
         data="src/dataset/yolo/dataset.yml",
         project="src/runs/detect",
+        name="baseline_train",
         multi_scale=True,
         amp=True,
+        freeze=5,
         box=8,
-        freeze=10,
         epochs=epochs,
         batch=batch,
         optimizer=optimizer,
