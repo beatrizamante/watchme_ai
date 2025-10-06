@@ -13,12 +13,17 @@ def train(weights=None, hp=None):
     
     results = model.train(
         data="src/dataset/yolo/dataset.yml",
+        project="src/runs/detect",
+        multi_scale=True,
+        amp=True,
+        box=8,
+        freeze=10,
         epochs=epochs,
         batch=batch,
         optimizer=optimizer,
         lr0=lr0,
         dropout=dropout,
         imgsz=640,
-        device=settings.YOLO_DEVICE
+        device=settings.YOLO_DEVICE,
         )
     return results
