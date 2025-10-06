@@ -38,7 +38,6 @@ def model_tune(baseline_weights=None):
         "scale": tune.uniform(0.0, 0.9),
         "shear": tune.uniform(0.0, 10.0),   
         "dropout": tune.uniform(0.0, 0.3),
-        "imgsz": tune.choice([320, 640])
     }
 
     try:
