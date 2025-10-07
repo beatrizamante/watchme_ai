@@ -7,6 +7,7 @@ src/dataset/yolo/images/*
 src/dataset/yolo/labels/*
 src/dataset/osnet/images/*
 serc/dataset/osnet/labels/*
+runs/
 
 *.rar
 *.zip
