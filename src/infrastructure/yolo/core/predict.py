@@ -1,5 +1,6 @@
-from ..client.client import yolo_client
+from ultralytics import YOLO
 
+trained_model = YOLO("../best_model")
 def predict(image_path: str):
-    results = yolo_client.predict(image_path)
+    results = trained_model.predict(image_path)
     return results

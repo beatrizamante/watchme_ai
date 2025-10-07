@@ -1,3 +1,5 @@
 pydantic_settings
 pydantic
 ultralytics
+ray
+tqdm
