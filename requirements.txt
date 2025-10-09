@@ -3,3 +3,5 @@ pydantic
 ultralytics
 ray
 tqdm
+fastapi
+uvicorn
