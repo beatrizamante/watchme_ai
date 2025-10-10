@@ -15,7 +15,7 @@ if __name__ == "__main__":
     print("\n[1/3] Training baseline model...")
     print("-" * 60)
     base_results = train()
-    best_weights = os.path.join(str(base_results.save_dir), "weights", "best.pt")
+    best_weights = os.path.join(str(base_results.save_dir), "weights", "best.pt") # type: ignore
     print("✓ Baseline training complete!")
     print(f"  Best weights: {best_weights}")
 

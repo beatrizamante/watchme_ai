@@ -20,7 +20,7 @@ def model_tune(baseline_weights=None):
 
     ray.init(
     ignore_reinit_error=True,
-    num_cpus=2,
+    num_cpus=8, #For google colab
     num_gpus=1 if settings.YOLO_DEVICE != 'cpu' else 0
     )
 
@@ -51,11 +51,10 @@ def model_tune(baseline_weights=None):
             gpu_per_trial=1 if settings.YOLO_DEVICE != 'cpu' else 0,
             project="src/runs/detect",
             name="ray_tune",
-            resume=True
         )  
         return results
     except (RuntimeError, TuneError) as e:
         print(f"Error during model tuning: {e}")
-        return None
+        raise e
     finally:
         ray.shutdown()
