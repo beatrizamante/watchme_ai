@@ -1,5 +1,7 @@
 from ultralytics import YOLO
+
 from config import settings
+
 
 def yolo_client(weights=None):
     """
