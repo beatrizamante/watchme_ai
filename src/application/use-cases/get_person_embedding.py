@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from src.domain.Person import PersonModel
 
 def get_person_embedding(person: PersonModel):
@@ -14,9 +15,6 @@ def get_person_embedding(person: PersonModel):
         person
     """
      try:
-         user = db.query(Usuario).filter(Usuario.id == user_id).first()
-         if not user:
-             raise HTTPException(status_code=400, detail="Usuário não encontrado")
          user_data =  {key: (value if key not in ["hash", "hash1"] else None) for key, value in user.__dict__.items()}        
          return user_data
      except Exception as e:
