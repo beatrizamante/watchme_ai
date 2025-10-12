@@ -17,8 +17,11 @@ class Settings(BaseSettings):
     YOLO_DEVICE: int | str = Field(0, description="Which device are we running") 
     YOLO_DATASET_PATH: str = Field("src/dataset/yolo/dataset.yml", description="Path where the dataset is saved")
     YOLO_PROJECT_PATH: str = Field("src/dataset/yolo/runs/detect", description="The path where the weights and metrics will be saved")
-    YOLO_TUNE_CHECKPOINT_DIR: str = Field("src/dataset/yolo/runs/detect/checkpoints", description="Path for tunin checkpoints")
     
+
+settings = Settings() # type: ignore
+
+class OsNet_Settings(BaseSettings):
     OSNET_EPOCHS: int = Field(60, description="Default number of epochs for OSNet training")
     OSNET_LEARNING_RATE: float = Field(0.0003, description="Default learning rate for OSNet")
     OSNET_WEIGHT_DECAY: float = Field(5e-4, description="Default weight decay for OSNet")
@@ -36,5 +39,5 @@ class Settings(BaseSettings):
     OSNET_DATASET_NAME: str = Field("market1501", description="Name of the ReID dataset")
     
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
-
-settings = Settings() # type: ignore
+    
+osnet_settings = Settings() # type: ignore
