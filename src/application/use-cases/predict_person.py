@@ -12,10 +12,10 @@ def compare_embeddings(chosen_person: List[float], people_list: tuple):
         is_match: True if the person is found or false if not;
         coordinate: The coordinates of the found person on the frames;
     """
-    
+
     for person in people_list:
         distance = calculate_distance(chosen_person, person)
-        if(distance >= 0.8):
-            return
-        
-    
+        if distance >= 0.8:
+            return True, person.coordinate
+
+    return False, None

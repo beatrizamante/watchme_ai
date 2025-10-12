@@ -6,31 +6,31 @@ from config import settings
 def create_osnet_model(num_classes=None, pretrained=True):
     """
     Create an OSNet model using torchreid
-    
+
     Args:
         num_classes: Number of identity classes in your dataset
         pretrained: Whether to use pretrained weights
-    
+
     Returns:
         model: OSNet model instance
     """
     model = torchreid.models.build_model(
-        name='osnet_x1_0', 
+        name='osnet_x1_0',
         num_classes=num_classes or settings.OSNET_NUM_CLASSES,
-        loss='triplet',  
+        loss='triplet',
         pretrained=pretrained
     )
-    
+
     return model
 
 def create_datamanager(dataset_name, data_dir):
     """
     Create a data manager for training/testing
-    
+
     Args:
         dataset_name: Name of the dataset (e.g., 'market1501', 'dukemtmcreid')
         data_dir: Path to dataset directory
-    
+
     Returns:
         datamanager: Torchreid data manager
     """
@@ -46,5 +46,5 @@ def create_datamanager(dataset_name, data_dir):
         num_instances=settings.OSNET_NUM_INSTANCES,
         train_sampler='RandomIdentitySampler'
     )
-    
+
     return datamanager

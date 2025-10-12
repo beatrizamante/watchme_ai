@@ -37,7 +37,7 @@ class OsNet_Settings(BaseSettings):
     OSNET_PRINT_FREQ: int = Field(10, description="Print frequency during training")
     OSNET_SAVE_DIR: str = Field("osnet_results", description="Directory to save OSNet results")
     OSNET_DATASET_NAME: str = Field("market1501", description="Name of the ReID dataset")
-    
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
     
 osnet_settings = Settings() # type: ignore
