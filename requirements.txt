@@ -5,3 +5,4 @@ ray
 tqdm
 fastapi
 uvicorn
+opencv-python

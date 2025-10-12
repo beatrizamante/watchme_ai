@@ -1,5 +1,7 @@
-import numpy as np
 from typing import List
+
+import numpy as np
+
 
 def calculate_distance(chosen_person: List[float], detected_person: List[float]):
     """This script calculates the cosine distance between embeddings

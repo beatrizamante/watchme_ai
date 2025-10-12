@@ -1,6 +1,9 @@
 import torchreid
+
 from config import settings
-from ..client.model import create_osnet_model, create_datamanager
+
+from ..client.model import create_datamanager, create_osnet_model
+
 
 def train(dataset_path, hp=None):
     """

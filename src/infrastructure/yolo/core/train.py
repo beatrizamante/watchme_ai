@@ -1,4 +1,5 @@
 from config import settings
+
 from ..client.model import yolo_client
 
 

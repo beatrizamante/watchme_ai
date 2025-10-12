@@ -4,8 +4,11 @@
 import ray
 from ray import tune
 from ray.tune.error import TuneError
+
 from config import settings
+
 from ..client.model import yolo_client
+
 
 def model_tune(baseline_weights=None):
     """The function for model tuning after the first baseline training.
