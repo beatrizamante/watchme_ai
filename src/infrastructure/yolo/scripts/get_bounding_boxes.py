@@ -1,5 +1,7 @@
 from typing import Any, Dict, List
+
 import cv2
+
 
 def get_bounding_boxes(
     images,

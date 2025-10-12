@@ -16,7 +16,7 @@ class HyperparameterTuner:
         self.settings = settings
         self.best_params = None
         self.model = None
-        
+
     def _get_search_space(self):
         """Define hyperparameter search space for YOLO training"""
         return {
@@ -51,7 +51,7 @@ class HyperparameterTuner:
 
         Returns:
             ray.tune.ExperimentAnalysis: Results object containing best hyperparameters
-            
+
         Raises:
             RuntimeError: If Ray Tune encounters an error
             TuneError: If there's an issue with the tuning process
@@ -82,7 +82,7 @@ class HyperparameterTuner:
                 name="ray_tune",
                 resume=resume_checkpoint
             )
-            
+
             self.best_params = results.get_results() # type: ignore
             return results
 
