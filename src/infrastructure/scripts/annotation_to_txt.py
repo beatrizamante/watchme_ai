@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 from tqdm import tqdm
 
 coco_json = "src/dataset/yolo/images/annotations/instances_val2017.json"

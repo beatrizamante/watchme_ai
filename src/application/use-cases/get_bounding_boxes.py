@@ -1,5 +1,6 @@
 from src.infrastructure.yolo.core.predict import predict
 
+
 def get_bounding_boxes(frame):
     """Get bounding boxes from frames fed to Yolo
 

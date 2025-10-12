@@ -1,5 +1,7 @@
-import uvicorn
 import logging
+
+import uvicorn
+
 
 def create_server():
     logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(message)s")

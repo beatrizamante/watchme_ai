@@ -13,3 +13,4 @@ deep-person-reid
 *.zip
 *.tar.gz
 yolo11n.pt
+.issirt.cfg

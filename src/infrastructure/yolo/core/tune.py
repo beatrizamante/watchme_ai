@@ -1,10 +1,13 @@
 """Model tuner for finding best parameters"""
 
 from pathlib import Path
+
 import ray
 from ray import tune
 from ray.tune.error import TuneError
+
 from src.infrastructure.yolo.client.model import yolo_client
+
 
 class HyperparameterTuner:
     """Handle hyperparameter tuning with Ray Tune (with resume support)"""

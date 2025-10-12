@@ -1,5 +1,7 @@
 import torchreid
+
 from config import settings
+
 
 def create_osnet_model(num_classes=None, pretrained=True):
     """

@@ -1,5 +1,6 @@
 from fastapi import File, HTTPException, UploadFile
 
+
 def create_person_embedding(file: UploadFile = File(...)):
     """Embed a given user image
     Args: 

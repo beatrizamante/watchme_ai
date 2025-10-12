@@ -1,5 +1,7 @@
 from http.client import HTTPException
+
 from src.domain.Person import PersonModel
+
 
 def get_person_embedding(person: PersonModel):
     """Get a chosen person's embedding from the database

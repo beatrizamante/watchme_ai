@@ -1,6 +1,8 @@
 import os
 
 from src.infrastructure.yolo.client.model import yolo_client
+
+
 class YOLOTrainer:
     """Handle YOLO training operations"""
 
