@@ -12,7 +12,7 @@ from src.infrastructure.yolo.scripts.get_bounding_boxes import \
 def load_trained_model(model_path: str | None = None) -> YOLO:
     """Load the trained YOLO model."""
     if model_path is None:
-        model_path = "src/runs/detect/baseline_train/weights/best.pt"
+        model_path = "src/infrastructure/yolo/client/best.pt"
     return YOLO(model_path)
 
 
