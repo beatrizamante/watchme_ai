@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from config import Settings
@@ -21,18 +20,18 @@ class YOLOPipeline:
             YOLO_DATASET_PATH="src/dataset/yolo/dataset.yml",
             YOLO_PROJECT_PATH="src/dataset/yolo/runs/detect",
         )
-        
+
         self.trainer = YOLOTrainer(self.settings)
         self.tuner = HyperparameterTuner(self.settings)
         self.baseline_weights = None
         self.best_hyperparams = None
         self.final_results = None
-        
+
     def _check_for_baseline_weights(self):
         """Check if there's an existing baseline weights to resume from"""
         baseline_dir = Path(self.settings.YOLO_PROJECT_PATH) / "baseline_train"
         best_weights_path = baseline_dir / "weights" / "best.pt"
-        
+
         if best_weights_path.exists():
             return True, str(best_weights_path)
         return False, None
@@ -46,13 +45,13 @@ class YOLOPipeline:
         print("="*60)
 
         has_baseline, baseline_path = self._check_for_baseline_weights()
-        
+
         if not has_baseline:
             print("\n[1/3] Training baseline model...")
             print("-" * 60)
-            
+
             baseline_results = self.trainer.train()
-            
+
             if baseline_results and hasattr(baseline_results, 'save_dir'):
                 self.baseline_weights = self.trainer.get_best_weights_path()
                 print(f"✓ Baseline training completed: {self.baseline_weights}")
@@ -67,7 +66,7 @@ class YOLOPipeline:
         tune_results = self.tuner.tune(
             baseline_weights=self.baseline_weights,
         )
-        
+
         self.best_hyperparams = tune_results.get_best_result().config # type: ignore
         print(f"✓ Best hyperparameters found: {self.best_hyperparams}")
 

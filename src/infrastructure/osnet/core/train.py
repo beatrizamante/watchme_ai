@@ -77,7 +77,7 @@ class OSNetTrainer:
         else:
             print("No checkpoint provided, starting from scratch")
 
-        engine = torchreid.engine.ImageTripletEngine(
+        engine = torchreid.engine.VideoTripletEngine(
             self.datamanager,
             self.model,
             optimizer=optimizer,
@@ -109,7 +109,6 @@ class OSNetTrainer:
             "rank1": test_results,
             "mAP": map_results,
             "save_dir": self.settings.OSNET_SAVE_DIR,
-            "start_epoch": start_epoch,
             "final_epoch": max_epoch,
         }
 
