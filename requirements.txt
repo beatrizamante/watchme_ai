@@ -5,6 +5,10 @@ ray
 tqdm
 fastapi
 uvicorn
+torch
+torchvision
+torchaudio
+seaborn
 numpy
 Cython
 h5py

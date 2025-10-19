@@ -14,17 +14,32 @@ class YOLOTrainer:
     def load_model(self, weights=None):
         """Load YOLO model"""
         self.model = yolo_client(weights)
-        print(f"✓ Model loaded: {getattr(self.model, 'ckpt_path', 'Unknown checkpoint path')}")
+        print(f"✓ Model loaded: {getattr(self.model, 'baseline_weights', 'Unknown path')}")
         return self.model
 
     def train(self, weights=None, hyperparams=None):
         """
-        Train YOLO model
-
+        Train the YOLO model with specified or default hyperparameters.
+        This method loads a YOLO model and initiates training with configurable
+        hyperparameters. If no hyperparameters are provided, default values from
+        settings are used.
         Args:
-            weights: Path to weights file
-            hyperparams: Dictionary of hyperparameters
+            weights (str, optional): Path to pre-trained weights file. If None,
+                uses default model loading behavior.
+            hyperparams (dict, optional): Dictionary containing training hyperparameters.
+                Supported keys:
+                - epochs (int): Number of training epochs
+                - batch (int): Batch size for training
+                - optimizer (str): Optimizer type
+                - lr0 (float): Initial learning rate
+                - dropout (float): Dropout rate
+        Returns:
+            object: Training results object containing metrics, logs, and model
+                performance data from the completed training session.
+        Raises:
+            ValueError: If the model fails to load or doesn't have a 'train' method.
         """
+
         self.load_model(weights)
         if self.model is None or not hasattr(self.model, "train"):
             raise ValueError("Failed to load YOLO model or 'train' method not found.")
