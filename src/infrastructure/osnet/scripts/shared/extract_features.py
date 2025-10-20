@@ -1,5 +1,5 @@
 import torch
-from torchreid.utils import FeatureExtractor
+import torchreid
 
 
 def extract_features(weights_path, device, datamanager):
@@ -12,14 +12,12 @@ def extract_features(weights_path, device, datamanager):
     """
     print("Extracting features from test set...")
 
-    # Create feature extractor
-    feature_extractor = FeatureExtractor(
+    feature_extractor = torchreid.utils.feature_extractor(
         model_name='osnet_x1_0',
         model_path=str(weights_path),
         device=device
     )
 
-    # Get test data
     test_loader = datamanager.test_loader
 
     query_features = []
@@ -33,25 +31,19 @@ def extract_features(weights_path, device, datamanager):
         for batch_idx, data in enumerate(test_loader):
             imgs, pids, camids = data[:3]
 
-            # Extract features using torchreid's feature extractor
             features = feature_extractor(imgs)
 
-            # Separate query and gallery based on datamanager logic
-            # This is dataset-specific; adjust based on your dataset structure
             if hasattr(datamanager, 'num_query'):
                 num_query = datamanager.num_query
                 if batch_idx * test_loader.batch_size < num_query:
-                    # Query samples
                     query_features.append(features.cpu())
                     query_pids.extend(pids.tolist())
                     query_camids.extend(camids.tolist())
                 else:
-                    # Gallery samples
                     gallery_features.append(features.cpu())
                     gallery_pids.extend(pids.tolist())
                     gallery_camids.extend(camids.tolist())
             else:
-                # If no clear query/gallery split, use all as gallery and subset as query
                 gallery_features.append(features.cpu())
                 gallery_pids.extend(pids.tolist())
                 gallery_camids.extend(camids.tolist())

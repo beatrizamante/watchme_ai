@@ -5,7 +5,7 @@ import torch
 
 from src.infrastructure.osnet.scripts.shared.compute_distance_matrix import \
     compute_distance_matrix
-from torchreid import metrics
+import torchreid
 
 
 def calculate_cmc(query_features, query_pids, query_camids,
@@ -41,7 +41,7 @@ def calculate_cmc(query_features, query_pids, query_camids,
     print("Computing distance matrix...")
     distmat = compute_distance_matrix(query_features, gallery_features)
 
-    cmc, _ = metrics.evaluate_rank(
+    cmc, _ = torchreid.metrics.evaluate_rank(
         distmat,
         query_pids,
         gallery_pids,
