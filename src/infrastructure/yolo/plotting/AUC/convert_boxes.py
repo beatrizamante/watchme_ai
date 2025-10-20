@@ -24,4 +24,9 @@ def yolo_xywh_to_xyxy(box, img_w, img_h):
     y1 = y_c - h/2
     x2 = x_c + w/2
     y2 = y_c + h/2
+
+    x1 = max(0, x1)
+    y1 = max(0, y1)
+    x2 = min(img_w, x2)
+    y2 = min(img_h, y2)
     return [x1, y1, x2, y2]
