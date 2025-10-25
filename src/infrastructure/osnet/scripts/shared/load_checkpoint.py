@@ -15,10 +15,13 @@ def load_checkpoint(weights_path, device, model):
         stored under the 'state_dict' key. Modify accordingly for other formats.
         Uses strict=False when loading state dict to allow partial loading.
     """
-    checkpoint = torch.load(weights_path, map_location=device)
-    state_dict = checkpoint['state_dict']  # Torchreid format; If you use another type, change this
+    checkpoint = torch.load(weights_path, map_location=device, weights_only=False)
+    state_dict = checkpoint['state_dict']
+
+    state_dict = {k: v for k, v in state_dict.items()
+                  if not k.startswith('classifier')}
+
     model.load_state_dict(state_dict, strict=False)
     model.to(device)
     model.eval()
-
     return model

@@ -47,7 +47,7 @@ def compute_minp_score(distmat, query_pids, gallery_pids, query_camids, gallery_
         num_valid_pos = 0
 
         for pos_idx in pos_indices:
-            neg_before = pos_idx  # All samples before current position are negatives
+            neg_before = pos_idx
 
             if neg_before > 0:
                 penalty = np.sum(1.0 / np.arange(1, neg_before + 1))

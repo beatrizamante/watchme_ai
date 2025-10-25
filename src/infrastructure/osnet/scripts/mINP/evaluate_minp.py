@@ -1,8 +1,5 @@
 """
 Script to calculate mean Inverse Negative Penalty (mINP) metrics for OSNet model.
-
-mINP is a robust evaluation metric for person re-identification that better handles
-the negative impact of hard false positives compared to traditional mAP.
 """
 
 import json
@@ -60,7 +57,7 @@ class OSNetmINPEvaluator:
         print("=" * 60)
 
         (query_features, query_pids, query_camids,
-         gallery_features, gallery_pids, gallery_camids) = extract_features(self.weights_path, self.device, self.datamanager)
+         gallery_features, gallery_pids, gallery_camids) = extract_features(self.model, self.device, self.datamanager)
 
         results = calculate_minp(
             query_features, query_pids, query_camids,

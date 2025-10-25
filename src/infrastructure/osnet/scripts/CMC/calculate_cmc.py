@@ -38,10 +38,8 @@ def calculate_cmc(query_features, query_pids, query_camids,
     gallery_pids = np.array(gallery_pids)
     gallery_camids = np.array(gallery_camids)
 
-    print("Computing distance matrix...")
     distmat = compute_distance_matrix(query_features, gallery_features)
-
-    cmc, _ = torchreid.metrics.evaluate_rank(
+    cmc, mAP = torchreid.metrics.evaluate_rank(
         distmat,
         query_pids,
         gallery_pids,
@@ -52,7 +50,9 @@ def calculate_cmc(query_features, query_pids, query_camids,
     )
 
     results = {
+        'dataset': 'dukemtmc-vidreid',
         'CMC': {},
+        'mAP': float(mAP),
         'num_query': len(query_pids),
         'num_gallery': len(gallery_pids),
         'timestamp': datetime.now().isoformat()

@@ -42,7 +42,7 @@ class OSNetCMCEvaluator:
         self.model = load_checkpoint(self.weights_path, self.device, self.model)
         print("OSNet model loaded successfully")
 
-    def evaluate(self, save_results=True, results_dir="src/infrastructure/osnet/scripts/results"):
+    def evaluate(self, results_dir="src/infrastructure/osnet/scripts/results"):
         """
         Run complete CMC evaluation.
 
@@ -57,40 +57,21 @@ class OSNetCMCEvaluator:
         print("Starting CMC Evaluation for OSNet")
         print("=" * 60)
 
-        # Extract features
         (query_features, query_pids, query_camids,
-         gallery_features, gallery_pids, gallery_camids) = extract_features(self.weights_path, self.device, self.datamanager)
+          gallery_features, gallery_pids, gallery_camids) = extract_features(
+             self.model,
+             self.device,
+             self.datamanager
+          )
 
-        # Calculate CMC
         results = calculate_cmc(
             query_features, query_pids, query_camids,
             gallery_features, gallery_pids, gallery_camids
-        )
+          )
 
-        # Print results
-        self._print_results(results)
-
-        # Save results
-        if save_results:
-            self._save_results(results, results_dir)
+        self._save_results(results, results_dir)
 
         return results
-
-
-    def _print_results(self, results):
-        """Print evaluation results."""
-        print("\n" + "=" * 40)
-        print("CMC EVALUATION RESULTS")
-        print("=" * 40)
-        print(f"Dataset: {results['dataset']}")
-        print(f"Query samples: {results['num_query']}")
-        print(f"Gallery samples: {results['num_gallery']}")
-        print(f"mAP: {results['mAP']:.4f}")
-        print("\nCMC Curve:")
-
-        for rank, accuracy in results['CMC'].items():
-            if rank != 'all_ranks':
-                print(f"  {rank}: {accuracy:.4f}")
 
     def _save_results(self, results, results_dir):
         """Save results to JSON file."""

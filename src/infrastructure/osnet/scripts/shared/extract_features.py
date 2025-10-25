@@ -1,65 +1,24 @@
-import torch
-import torchreid
+from src.infrastructure.osnet.scripts.shared.extract_from_loader import extract_from_loader
 
-
-def extract_features(weights_path, device, datamanager):
+def extract_features(model, device, datamanager):
     """
-    Extract features for all test images.
-
-    Returns:
-        tuple: (query_features, query_pids, query_camids,
-               gallery_features, gallery_pids, gallery_camids)
+    Extract features for video ReID with nested dict structure.
     """
     print("Extracting features from test set...")
-
-    feature_extractor = torchreid.utils.feature_extractor(
-        model_name='osnet_x1_0',
-        model_path=str(weights_path),
-        device=device
-    )
+    model.eval()
 
     test_loader = datamanager.test_loader
+    dataset_name = list(test_loader.keys())[0]
 
-    query_features = []
-    query_pids = []
-    query_camids = []
-    gallery_features = []
-    gallery_pids = []
-    gallery_camids = []
+    query_loader = test_loader[dataset_name]['query']
+    gallery_loader = test_loader[dataset_name]['gallery']
 
-    with torch.no_grad():
-        for batch_idx, data in enumerate(test_loader):
-            imgs, pids, camids = data[:3]
+    query_features, query_pids, query_camids = extract_from_loader(model, device, query_loader, "Query")
+    gallery_features, gallery_pids, gallery_camids = extract_from_loader(model, device, gallery_loader, "Gallery")
 
-            features = feature_extractor(imgs)
-
-            if hasattr(datamanager, 'num_query'):
-                num_query = datamanager.num_query
-                if batch_idx * test_loader.batch_size < num_query:
-                    query_features.append(features.cpu())
-                    query_pids.extend(pids.tolist())
-                    query_camids.extend(camids.tolist())
-                else:
-                    gallery_features.append(features.cpu())
-                    gallery_pids.extend(pids.tolist())
-                    gallery_camids.extend(camids.tolist())
-            else:
-                gallery_features.append(features.cpu())
-                gallery_pids.extend(pids.tolist())
-                gallery_camids.extend(camids.tolist())
-
-                if batch_idx < len(test_loader) * 0.2:
-                    query_features.append(features.cpu())
-                    query_pids.extend(pids.tolist())
-                    query_camids.extend(camids.tolist())
-
-            if batch_idx % 50 == 0:
-                print(f"Processed batch {batch_idx}/{len(test_loader)}")
-
-    query_features = torch.cat(query_features, dim=0) if query_features else torch.empty(0)
-    gallery_features = torch.cat(gallery_features, dim=0) if gallery_features else torch.empty(0)
-
-    print(f"Extracted features: Query={query_features.shape}, Gallery={gallery_features.shape}")
+    print(f"\nFinal results:")
+    print(f"Query: {query_features.shape}, PIDs: {len(query_pids)}, CamIDs: {len(query_camids)}")
+    print(f"Gallery: {gallery_features.shape}, PIDs: {len(gallery_pids)}, CamIDs: {len(gallery_camids)}")
 
     return (query_features, query_pids, query_camids,
             gallery_features, gallery_pids, gallery_camids)
