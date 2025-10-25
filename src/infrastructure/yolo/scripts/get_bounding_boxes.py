@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import cv2
 
@@ -6,7 +6,7 @@ import cv2
 def get_bounding_boxes(
     images,
     results
-) -> List[Dict[str, Any]] | None:
+) -> Union[List[Dict[str, Any]], None]:
     """
     Extracts bounding boxes from YOLO detection results and crops corresponding regions from the input images.
     Args:

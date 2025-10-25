@@ -4,7 +4,6 @@ from typing import List, Union
 
 import cv2
 
-
 class VideoProcessor:
     """Handle video processing with async queues"""
 
