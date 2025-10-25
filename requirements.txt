@@ -6,8 +6,6 @@ tqdm
 fastapi
 uvicorn
 numpy
-optuna
-optuna-dashboard
 Cython
 h5py
 Pillow
