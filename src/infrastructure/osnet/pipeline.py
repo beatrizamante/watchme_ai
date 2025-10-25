@@ -58,20 +58,13 @@ class OSNetPipeline:
         print("\n[2/2] Final training with baseline weights...")
         print("-" * 60)
 
-        #self.final_results = self.trainer.train(weights=self.baseline_weights)
+        self.final_results = self.trainer.train(weights=self.baseline_weights)
 
         print("\n" + "=" * 60)
         print("OSNet Pipeline completed successfully!")
-        #print(f"Final Rank-1: {self.final_results['rank1']:.3f}")
-        #print(f"Final mAP: {self.final_results['mAP']:.3f}")
-        #print(f"Model saved at: {self.final_results['save_dir']}")
+        print(f"Final Rank-1: {self.final_results['rank1']:.3f}")
+        print(f"Final mAP: {self.final_results['mAP']:.3f}")
+        print(f"Model saved at: {self.final_results['save_dir']}")
         print("=" * 60)
 
         return self.final_results
-
-
-# Standalone function for easy usage
-def run_osnet_pipeline():
-    """Run the complete OSNet training pipeline."""
-    pipeline = OSNetPipeline()
-    return pipeline.run()
