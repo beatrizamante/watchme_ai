@@ -6,7 +6,7 @@ from src.infrastructure.yolo.plotting import compute_auc
 from src.infrastructure.yolo.plotting.AUC.build_score_labels import build_scores_labels
 from src.infrastructure.yolo.plotting.AUC.loaders import load_ground_truth, load_predictions
 from src.infrastructure.yolo.plotting.AUC.plot_auc import plot_pr_per_class, plot_roc_per_class
-#NOTE - THIS ONLY WORKS IF YOU USE PREDICT WITH save_txt=True AND source=YOUR_VAL_DATASET
+#NOTE - THIS ONLY WORKS IF YOU USE PREDICT WITH save_txt=True AND source=VAL_DATASET
 
 def run():
     """
