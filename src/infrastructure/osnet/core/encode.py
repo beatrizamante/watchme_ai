@@ -27,7 +27,6 @@ class OSNetEncoder:
 
     def _load_model(self):
         """Load the OSNet model with pre-trained weights."""
-        print(f"Loading OSNet model from {self.weights_path}")
         self.model = load_checkpoint(self.weights_path, self.device, self.model)
         print("OSNet model loaded successfully")
 
