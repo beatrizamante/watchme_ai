@@ -10,15 +10,8 @@ class OsnetModel:
         model: The OSNet model instance.
         datamanager: The torchreid data manager instance.
         settings: Configuration settings for OSNet.
-    Methods:
-        create_osnet_model(num_classes=None):
-            Builds and returns an OSNet model with the specified number of classes.
-            If num_classes is not provided, uses the default from settings.
-            Moves the model to CUDA if available.
-        create_datamanager():
-            Creates and returns a torchreid ImageDataManager for training and testing.
-            Uses settings for dataset location, image size, batch size, transforms, and sampler.
     """
+    
     def __init__(self):
         self.model = None
         self.datamanager = None
@@ -51,7 +44,7 @@ class OsnetModel:
         Returns:
             datamanager: Torchreid data manager
         """
-        self.datamanager = torchreid.data.ImageDataManager(
+        self.datamanager = torchreid.data.VideoDataManager(
             root=self.settings.OSNET_ROOT_DIR,
             sources=self.settings.OSNET_DATASET_NAME,
             height=self.settings.OSNET_IMG_HEIGHT,
