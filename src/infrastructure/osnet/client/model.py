@@ -4,25 +4,15 @@ import torch
 from config import osnet_settings
 
 class OsnetModel:
-    """OsnetModel is a client class for managing the OSNet model and its associated data manager using torchreid.
-        model (torch.nn.Module or None): The OSNet model instance.
-        datamanager (torchreid.data.ImageDataManager or None): The data manager for handling image datasets.
-        settings (object): Configuration settings for the OSNet model.
-    Methods:
-        __init__():
-            Initializes the OsnetModel instance with default values for model, datamanager, and settings.
-        create_osnet_model(num_classes=None):
-            Builds and returns an OSNet model using torchreid with the specified number of identity classes.
-            If num_classes is not provided, uses the value from settings.
-            Moves the model to CUDA if available.
-        create_datamanager():
-            Creates and returns a torchreid ImageDataManager for training and testing.
-            Uses configuration values from settings to set up the data manager.
     """
+    A wrapper class for creating and managing an OSNet model and its data manager using torchreid.
+    Attributes:
+        model: The OSNet model instance.
+        datamanager: The torchreid data manager instance.
+        settings: Configuration settings for OSNet.
+    """
+    
     def __init__(self):
-        """
-        Initializes the model client with default values.
-        """
         self.model = None
         self.datamanager = None
         self.settings = osnet_settings
@@ -30,7 +20,6 @@ class OsnetModel:
     def create_osnet_model(self, num_classes=None):
         """
         Create an OSNet model using torchreid
-
         Args:
             num_classes: Number of identity classes in your dataset
 
