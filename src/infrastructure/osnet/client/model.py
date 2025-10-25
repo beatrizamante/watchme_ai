@@ -1,50 +1,70 @@
 import torchreid
+import torch
 
-from config import settings
+from config import osnet_settings
 
-
-def create_osnet_model(num_classes=None, pretrained=True):
+class OsnetModel:
+    """OsnetModel is a client class for managing the OSNet model and its associated data manager using torchreid.
+        model (torch.nn.Module or None): The OSNet model instance.
+        datamanager (torchreid.data.ImageDataManager or None): The data manager for handling image datasets.
+        settings (object): Configuration settings for the OSNet model.
+    Methods:
+        __init__():
+            Initializes the OsnetModel instance with default values for model, datamanager, and settings.
+        create_osnet_model(num_classes=None):
+            Builds and returns an OSNet model using torchreid with the specified number of identity classes.
+            If num_classes is not provided, uses the value from settings.
+            Moves the model to CUDA if available.
+        create_datamanager():
+            Creates and returns a torchreid ImageDataManager for training and testing.
+            Uses configuration values from settings to set up the data manager.
     """
-    Create an OSNet model using torchreid
+    def __init__(self):
+        """
+        Initializes the model client with default values.
+        """
+        self.model = None
+        self.datamanager = None
+        self.settings = osnet_settings
 
-    Args:
-        num_classes: Number of identity classes in your dataset
-        pretrained: Whether to use pretrained weights
+    def create_osnet_model(self, num_classes=None):
+        """
+        Create an OSNet model using torchreid
 
-    Returns:
-        model: OSNet model instance
-    """
-    model = torchreid.models.build_model(
-        name='osnet_x1_0',
-        num_classes=num_classes or settings.OSNET_NUM_CLASSES,
-        loss='triplet',
-        pretrained=pretrained
-    )
+        Args:
+            num_classes: Number of identity classes in your dataset
 
-    return model
+        Returns:
+            model: OSNet model instance
+        """
+        self.model = torchreid.models.build_model(
+            name='osnet_x1_0',
+            num_classes=num_classes or self.settings.OSNET_NUM_CLASSES,
+            loss='triplet',
+        )
 
-def create_datamanager(dataset_name, data_dir):
-    """
-    Create a data manager for training/testing
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
 
-    Args:
-        dataset_name: Name of the dataset (e.g., 'market1501', 'dukemtmcreid')
-        data_dir: Path to dataset directory
+        return self.model
 
-    Returns:
-        datamanager: Torchreid data manager
-    """
-    datamanager = torchreid.data.ImageDataManager(
-        root=data_dir,
-        sources=dataset_name,
-        targets=dataset_name,
-        height=settings.OSNET_IMG_HEIGHT,
-        width=settings.OSNET_IMG_WIDTH,
-        batch_size_train=settings.OSNET_BATCH_SIZE,
-        batch_size_test=settings.OSNET_BATCH_SIZE,
-        transforms=['random_flip', 'random_crop'],
-        num_instances=settings.OSNET_NUM_INSTANCES,
-        train_sampler='RandomIdentitySampler'
-    )
+    def create_datamanager(self):
+        """
+        Create a data manager for training/testing
 
-    return datamanager
+        Returns:
+            datamanager: Torchreid data manager
+        """
+        self.datamanager = torchreid.data.VideoDataManager(
+            root=self.settings.OSNET_ROOT_DIR,
+            sources=self.settings.OSNET_DATASET_NAME,
+            height=self.settings.OSNET_IMG_HEIGHT,
+            width=self.settings.OSNET_IMG_WIDTH,
+            batch_size_train=self.settings.OSNET_BATCH_SIZE,
+            batch_size_test=self.settings.OSNET_BATCH_SIZE,
+            transforms=['random_flip', 'random_crop', 'random_erase'],
+            num_instances=self.settings.OSNET_NUM_INSTANCES,
+            train_sampler='RandomIdentitySampler',
+        )
+
+        return self.datamanager

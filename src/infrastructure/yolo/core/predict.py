@@ -1,10 +1,13 @@
 """Module for YOLO object detection and prediction."""
 
 from typing import Any, Dict, List, Union
+
 import numpy as np
 from ultralytics import YOLO
 
-from src.infrastructure.yolo.scripts.get_bounding_boxes import get_bounding_boxes
+from src.infrastructure.yolo.scripts.get_bounding_boxes import \
+    get_bounding_boxes
+
 
 def load_trained_model(model_path: str | None = None) -> YOLO:
     """Load the trained YOLO model."""

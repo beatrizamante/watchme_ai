@@ -11,4 +11,3 @@ def yolo_client(weights=None):
     """
     model_path = weights if weights else settings.YOLO_MODEL_PATH
     return YOLO(model_path)
-

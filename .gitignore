@@ -8,9 +8,9 @@ src/dataset/yolo/labels/*
 src/dataset/osnet/images/*
 src/dataset/osnet/labels/*
 runs/
-deep-person-reid
+deep-person-reid/
 *.rar
 *.zip
 *.tar.gz
 yolo11n.pt
-.issirt.cfg
+.issort.cfg
