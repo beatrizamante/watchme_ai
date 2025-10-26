@@ -1,9 +1,9 @@
 from typing import List
 
+from src._lib.decrypt import decrypt_embedding
 from src.scripts.calculate_distance import calculate_distance
 
-
-def compare_embeddings(chosen_person: List[float], people_list: tuple):
+def predict_person_on_stream(chosen_person: List[float], stream):
     """This method compares embeddings
     Args:
         chosen_person: The person that we are trying to find in video;
@@ -13,8 +13,9 @@ def compare_embeddings(chosen_person: List[float], people_list: tuple):
         coordinate: The coordinates of the found person on the frames;
     """
 
+    decrypted_embedding = decrypt_embedding(chosen_person, shape=(512,), dtype='float32')
     for person in people_list:
-        distance = calculate_distance(chosen_person, person)
+        distance = calculate_distance(decrypted_embedding, person)
         if distance >= 0.8:
             return True, person.coordinate
 

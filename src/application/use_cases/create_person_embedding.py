@@ -1,9 +1,7 @@
-from fastapi import File, HTTPException, UploadFile
-
+from src._lib.encrypt import encrypt_embedding
 from src.infrastructure.osnet.core.encode import OSNetEncoder
 
-
-def create_person_embedding(file: UploadFile = File(...)):
+def create_person_embedding(file):
     """Embed a given user image
     Args:
         file: person image for embedding
@@ -20,7 +18,6 @@ def create_person_embedding(file: UploadFile = File(...)):
         if not encoding:
             raise ValueError("No person detected, please, try with another image")
 
-#TODO - Add hashing
-        return encoding
+        return encrypt_embedding(encoding)
     except Exception as e:
         raise e

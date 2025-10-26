@@ -12,7 +12,6 @@ from src.infrastructure.yolo.client.model import yolo_client
 
 class HyperparameterTuner:
     """Handle hyperparameter tuning with Ray Tune (with resume support)"""
-
     def __init__(self):
         self.settings = YOLOSettings()
         self.best_params = None
