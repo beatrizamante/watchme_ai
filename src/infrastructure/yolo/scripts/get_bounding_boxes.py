@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Union
 
 import cv2
 
-
 def get_bounding_boxes(
     images,
     results

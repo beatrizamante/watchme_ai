@@ -1,8 +1,7 @@
 import torchreid
 import torch
 
-from config import osnet_settings
-
+from config import OSNetSettings
 class OsnetModel:
     """
     A wrapper class for creating and managing an OSNet model and its data manager using torchreid.
@@ -11,11 +10,11 @@ class OsnetModel:
         datamanager: The torchreid data manager instance.
         settings: Configuration settings for OSNet.
     """
-    
+
     def __init__(self):
         self.model = None
         self.datamanager = None
-        self.settings = osnet_settings
+        self.settings = OSNetSettings()
 
     def create_osnet_model(self, num_classes=None):
         """

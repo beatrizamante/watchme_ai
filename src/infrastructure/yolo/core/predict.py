@@ -3,21 +3,10 @@
 from typing import Any, Dict, List, Union
 
 import numpy as np
-from ultralytics import YOLO
 
+from src.infrastructure.yolo.client.model import yolo_client
 from src.infrastructure.yolo.scripts.get_bounding_boxes import \
     get_bounding_boxes
-
-
-def load_trained_model(model_path: str | None = None) -> YOLO:
-    """Load the trained YOLO model."""
-    if model_path is None:
-        model_path = "src/infrastructure/yolo/client/best.pt"
-    return YOLO(model_path)
-
-
-trained_model = load_trained_model()
-
 
 def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> List[Dict[str, Any]]:
     """
@@ -34,14 +23,16 @@ def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> Lis
         RuntimeError: If YOLO prediction fails.
         ValueError: If input images are invalid.
     """
+    model = yolo_client()
+
     if not isinstance(images, list):
         images = [images]
 
     try:
-        results = trained_model.predict(
+        results = model.predict(
             images,
             stream=True,
-            conf=0.3,
+            conf=0.28,
             classes=[0],
             verbose=False,
         )

@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from config import osnet_settings
+from config import OSNetSettings
 from src.infrastructure.osnet.scripts.shared.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.client.model import OsnetModel
 from src.infrastructure.osnet.scripts.transformers.transformers import \
@@ -15,7 +15,7 @@ class OSNetEncoder:
 
     def __init__(self):
         self.osnet_client = OsnetModel()
-        self.settings = osnet_settings
+        self.settings = OSNetSettings()
         self.model = self.osnet_client.create_osnet_model(
             num_classes=self.settings.OSNET_NUM_CLASSES
         )

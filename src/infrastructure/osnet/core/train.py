@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torchreid
 
-from config import osnet_settings
+from config import OSNetSettings
 from src.infrastructure.osnet.client.model import OsnetModel
 
 
@@ -12,7 +12,7 @@ class OSNetTrainer:
     """Handle OSNet training operations."""
 
     def __init__(self):
-        self.settings = osnet_settings
+        self.settings = OSNetSettings()
         self.osnet_client = OsnetModel()
         self.datamanager = None
         self.model = None

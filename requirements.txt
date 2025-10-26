@@ -1,6 +1,7 @@
 pydantic_settings
 pydantic
 ultralytics
+pycryptodome
 ray
 tqdm
 fastapi
