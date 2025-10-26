@@ -1,5 +1,6 @@
 from src._lib.encrypt import encrypt_embedding
 from src.infrastructure.osnet.core.encode import OSNetEncoder
+from src.infrastructure.yolo.core.predict import predict
 
 def create_person_embedding(file):
     """Embed a given user image
@@ -13,8 +14,16 @@ def create_person_embedding(file):
     """
     encode = OSNetEncoder()
 
+    person_bbox_list = predict(file)
+
+    if not person_bbox_list or not person_bbox_list[0]['detections']:
+        raise ValueError("No person detected, please, try with another image")
+
+    first_detection = person_bbox_list[0]['detections'][0]
+    cropped_image = first_detection['cropped_image']
+
     try:
-        encoding = encode.encode_single_image(file)
+        encoding = encode.encode_single_image(cropped_image)
         if not encoding:
             raise ValueError("No person detected, please, try with another image")
 
