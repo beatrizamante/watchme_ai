@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 
 
-def calculate_distance(chosen_person: List[float], detected_person: List[float]):
+def calculate_distance(chosen_person, detected_person):
     """This script calculates the cosine distance between embeddings
     Args:
         chosen_person: The person that we are trying to find in video;
