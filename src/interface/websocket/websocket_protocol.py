@@ -7,6 +7,7 @@ ws_router = APIRouter()
 @ws_router.websocket("/video-stream")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+
     while True:
         data = await websocket.receive_json()
         frame = data["frame"]

@@ -1,12 +1,14 @@
 venv
 .env
+.env.osnet
+.env.yolo
 __pycache__/
 *.py[cod]
 
-src/dataset/yolo/images/*
-src/dataset/yolo/labels/*
-src/dataset/osnet/images/*
-src/dataset/osnet/labels/*
+src/infrastructure/dataset/yolo/images/*
+src/infrastructure/dataset/yolo/labels/*
+src/infrastructure/dataset/osnet/images/*
+src/infrastructure/dataset/osnet/labels/*
 runs/
 deep-person-reid/
 *.rar

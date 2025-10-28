@@ -3,7 +3,7 @@ from fastapi import APIRouter, UploadFile, File
 from src.application.use_cases.create_person_embedding import create_person_embedding
 from src.application.use_cases.predict_person import predict_person_on_stream
 from src.domain.Person import Person
-from src.domain.VideoRequest import VideoRequest
+from src.domain.Video import Video
 
 router = APIRouter()
 
@@ -14,11 +14,10 @@ async def upload_person_image(file: UploadFile = File(...)):
     """
     return create_person_embedding(file)
 
-@router.post("/find/{personId}")
-async def predict_person(person: Person, request: VideoRequest):
+@router.post("/find")
+async def predict_person(person: Person, video: Video):
     """
     Search requisition for person of interest in a video or stream
     """
-    video_path = request.video_path
-    matches = predict_person_on_stream(person.embed, video_path)
+    matches = predict_person_on_stream(person.embed, video.path)
     return { "matches": matches }

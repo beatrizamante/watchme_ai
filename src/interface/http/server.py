@@ -9,7 +9,7 @@ def make_server():
 
     config = uvicorn.Config("main:app",
                             host="0.0.0.0",
-                            port=443,
+                            port=5000,
                             )
     server = uvicorn.Server(config)
     return server, logger

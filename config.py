@@ -19,7 +19,7 @@ class YOLOSettings(BaseSettings):
     YOLO_DATASET_PATH: str = Field(default="src/dataset/yolo/dataset.yml", description="Path where the dataset is saved")
     YOLO_PROJECT_PATH: str = Field(default="src/dataset/yolo/runs/detect", description="The path where the weights and metrics will be saved")
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env.yolo", env_file_encoding="utf-8")
 
 class OSNetSettings(BaseSettings):
     OSNET_EPOCHS: int = Field(default=150, description="Default number of epochs for OSNet training")
@@ -39,7 +39,7 @@ class OSNetSettings(BaseSettings):
     OSNET_ROOT_DIR: str = Field(default="src/dataset/osnet", description="Directory to save OSNet results")
     OSNET_SAVE_DIR: str = Field(default="src/dataset/osnet/saved_results", description="Directory to save OSNet results")
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env.osnet", env_file_encoding="utf-8")
 class KeySetting(BaseSettings):
     ENCRYPTION_KEY: str = Field(default="Insert Key", description="AES Encryption key for embedding security. Add in .env")
 
