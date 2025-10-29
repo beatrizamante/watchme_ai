@@ -1,4 +1,5 @@
 pydantic_settings
+torchreid
 pydantic
 ultralytics
 pycryptodome
@@ -9,6 +10,7 @@ uvicorn
 torch
 torchvision
 torchaudio
+python-multipart
 seaborn
 numpy
 Cython

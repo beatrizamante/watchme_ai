@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.interface.http.handlers.person_embedding_handler import router as person_router
+from src.interface.http.routes.person_embedding_handler import router as person_router
 from src.interface.http.server import make_server
 from src.interface.websocket.websocket_protocol import ws_router
 
