@@ -4,6 +4,8 @@ from typing import List, Union
 
 import cv2
 
+from src.infrastructure.yolo.core.predict import predict
+
 class VideoProcessor:
     """Handle video processing with async queues"""
 

@@ -1,7 +1,7 @@
 from src._lib.decrypt import decrypt_embedding
 from src.infrastructure.osnet.core.encode import OSNetEncoder
 from src.infrastructure.yolo.core.predict import predict
-from src.scripts.calculate_distance import calculate_distance
+from src.scripts.calculate_distance import compute_euclidean_distance
 
 encoder = OSNetEncoder()
 
@@ -32,7 +32,7 @@ def predict_person_on_stream(chosen_person, stream):
     matches = []
 
     for i, encoded_person in enumerate(encoded_batch):
-        distance = calculate_distance(decrypted_embedding, encoded_person)
+        distance = compute_euclidean_distance(decrypted_embedding, encoded_person)
         if distance < 0.8:
             matches.append({
                 "bbox": all_bboxes[i],
