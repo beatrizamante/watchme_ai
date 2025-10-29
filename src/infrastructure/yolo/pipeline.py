@@ -21,8 +21,12 @@ class YOLOPipeline:
         baseline_dir = Path(self.settings.YOLO_PROJECT_PATH) / "baseline_train"
         best_weights_path = baseline_dir / "weights" / "best.pt"
 
+        model_path = Path(self.settings.YOLO_MODEL_PATH)
+
         if best_weights_path.exists():
             return True, str(best_weights_path)
+        elif model_path.exists():
+            return True, str(model_path)
         return False, None
 
     def run(self):

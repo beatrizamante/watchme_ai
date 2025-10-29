@@ -1,7 +1,7 @@
 """OSNet training pipeline for person re-identification."""
 
 from pathlib import Path
-from config import osnet_settings
+from config import OSNetSettings
 from src.infrastructure.osnet.core.train import OSNetTrainer
 
 class OSNetPipeline:
@@ -9,7 +9,7 @@ class OSNetPipeline:
 
     def __init__(self) -> None:
         self.trainer = None
-        self.settings = osnet_settings
+        self.settings = OSNetSettings()
         self.baseline_weights = None
         self.final_results = None
         self._initialize_components()
@@ -44,8 +44,8 @@ class OSNetPipeline:
             print("\n[1/2] Training baseline OSNet model...")
             print("-" * 60)
 
-            baseline_results = self.trainer.train()
-            self.baseline_weights = self.trainer.get_best_model_path()
+            baseline_results = self.trainer.train() # type: ignore
+            self.baseline_weights = self.trainer.get_best_model_path() # type: ignore
 
             print("✓ Baseline training completed")
             print(f"  - Rank-1: {baseline_results['rank1']:.3f}")
@@ -58,7 +58,7 @@ class OSNetPipeline:
         print("\n[2/2] Final training with baseline weights...")
         print("-" * 60)
 
-        self.final_results = self.trainer.train(weights=self.baseline_weights)
+        self.final_results = self.trainer.train(weights=self.baseline_weights) # type: ignore
 
         print("\n" + "=" * 60)
         print("OSNet Pipeline completed successfully!")

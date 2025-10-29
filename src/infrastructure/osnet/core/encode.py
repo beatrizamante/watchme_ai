@@ -6,21 +6,21 @@ import numpy as np
 import torch
 
 from config import OSNetSettings
-from src.infrastructure.osnet.scripts.shared.load_checkpoint import load_checkpoint
-from src.infrastructure.osnet.client.model import OsnetModel
+from src.infrastructure.osnet.client.model import OSNetModel
+from src.infrastructure.osnet.plotting.shared.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.scripts.transformers.transformers import \
     create_transforms, preprocess_image
 class OSNetEncoder:
     """Handle OSNet encoding operations for person re-identification."""
 
     def __init__(self):
-        self.osnet_client = OsnetModel()
+        self.osnet_client = OSNetModel()
         self.settings = OSNetSettings()
         self.model = self.osnet_client.create_osnet_model(
             num_classes=self.settings.OSNET_NUM_CLASSES
         )
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.weights_path = Path("src/infrastructure/osnet/client/model.pth.tar")
+        self.weights_path = Path(self.settings.OSNET_SAVE_DIR, self.settings.OSNET_MODEL_NAME)
         self.transform = create_transforms(self.settings.OSNET_IMG_HEIGHT,
                                            self.settings.OSNET_IMG_WIDTH)
         self._load_model()

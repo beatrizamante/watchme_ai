@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Union
 
 import numpy as np
 
+from config import YOLOSettings
 from src.infrastructure.yolo.client.model import yolo_client
 from src.infrastructure.yolo.scripts.get_bounding_boxes import \
     get_bounding_boxes
@@ -23,7 +24,8 @@ def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> Lis
         RuntimeError: If YOLO prediction fails.
         ValueError: If input images are invalid.
     """
-    model = yolo_client()
+    settings = YOLOSettings()
+    model = yolo_client(settings.YOLO_MODEL_PATH)
 
     if not isinstance(images, list):
         images = [images]

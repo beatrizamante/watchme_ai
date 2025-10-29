@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def compute_minp_score(distmat, query_pids, gallery_pids, query_camids, gallery_camids):
     """
     Compute mean Inverse Negative Penalty (mINP) score.

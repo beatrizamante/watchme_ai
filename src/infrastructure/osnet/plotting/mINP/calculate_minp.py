@@ -1,12 +1,8 @@
-from datetime import datetime
-
 import numpy as np
 import torch
 
-from src.infrastructure.osnet.scripts.mINP.compute_minp_score import \
-    compute_minp_score
-from src.infrastructure.osnet.scripts.shared.compute_distance_matrix import \
-    compute_distance_matrix
+from src.infrastructure.osnet.plotting.mINP.compute_minp_score import compute_minp_score
+from src.infrastructure.osnet.plotting.shared.compute_distance_matrix import compute_distance_matrix
 
 def calculate_minp(query_features, query_pids, query_camids,
                    gallery_features, gallery_pids, gallery_camids):
@@ -44,9 +40,6 @@ def calculate_minp(query_features, query_pids, query_camids,
 
     results = {
         'mINP': float(minp_score),
-        'num_query': len(query_pids),
-        'num_gallery': len(gallery_pids),
-        'timestamp': datetime.now().isoformat()
     }
 
     return results

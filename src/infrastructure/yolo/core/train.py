@@ -20,27 +20,19 @@ class YOLOTrainer:
 
     def train(self, weights=None, hyperparams=None):
         """
-        Train the YOLO model with specified or default hyperparameters.
-        This method loads a YOLO model and initiates training with configurable
-        hyperparameters. If no hyperparameters are provided, default values from
-        settings are used.
+        Trains the YOLO model using the specified weights and hyperparameters.
         Args:
-            weights (str, optional): Path to pre-trained weights file. If None,
-                uses default model loading behavior.
-            hyperparams (dict, optional): Dictionary containing training hyperparameters.
-                Supported keys:
-                - epochs (int): Number of training epochs
-                - batch (int): Batch size for training
-                - optimizer (str): Optimizer type
-                - lr0 (float): Initial learning rate
-                - dropout (float): Dropout rate
-        Returns:
-            object: Training results object containing metrics, logs, and model
-                performance data from the completed training session.
+            weights (str or None): Path to the pretrained weights file. If None, uses default weights.
+            hyperparams (dict or None): Dictionary of hyperparameters to override defaults. Supported keys include:
+                - "box" (int): Box loss gain.
+                - "cls" (float): Class loss gain.
+                - "lr0" (float): Initial learning rate.
+                - "dropout" (float): Dropout rate.
         Raises:
-            ValueError: If the model fails to load or doesn't have a 'train' method.
+            ValueError: If the YOLO model fails to load or does not have a 'train' method.
+        Returns:
+            Any: Training results returned by the YOLO model's train method.
         """
-
         self.load_model(weights)
         if self.model is None or not hasattr(self.model, "train"):
             raise ValueError("Failed to load YOLO model or 'train' method not found.")

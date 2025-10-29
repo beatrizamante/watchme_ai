@@ -1,12 +1,8 @@
-from datetime import datetime
-
 import numpy as np
 import torch
-
-from src.infrastructure.osnet.scripts.shared.compute_distance_matrix import \
-    compute_distance_matrix
 import torchreid
 
+from src.infrastructure.osnet.plotting.shared.compute_distance_matrix import compute_distance_matrix
 
 def calculate_cmc(query_features, query_pids, query_camids,
                       gallery_features, gallery_pids, gallery_camids,
@@ -55,7 +51,6 @@ def calculate_cmc(query_features, query_pids, query_camids,
         'mAP': float(mAP),
         'num_query': len(query_pids),
         'num_gallery': len(gallery_pids),
-        'timestamp': datetime.now().isoformat()
     }
 
     for rank in [1, 5, 10, 20]:

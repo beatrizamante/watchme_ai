@@ -1,4 +1,6 @@
-from src.infrastructure.osnet.scripts.shared.extract_from_loader import extract_from_loader
+
+from src.infrastructure.osnet.plotting.shared.extract_from_loader import extract_from_loader
+
 
 def extract_features(model, device, datamanager):
     """
