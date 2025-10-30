@@ -12,8 +12,8 @@ documentation for details.
 
 
 .. toctree::
-   :maxdepth: 2
    :caption: Contents:
 
+   introduction
    usage/installation
    usage/quickstart
