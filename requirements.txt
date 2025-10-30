@@ -1,6 +1,10 @@
 pydantic_settings
+torchreid
 pydantic
 ultralytics
+ray[tune]
+wandb
+pycryptodome
 ray
 tqdm
 fastapi
@@ -8,6 +12,7 @@ uvicorn
 torch
 torchvision
 torchaudio
+python-multipart
 seaborn
 numpy
 Cython
@@ -26,6 +31,7 @@ yapf
 isort==4.3.21
 imageio
 chardet
+
 # Export --------------------------------------
 # onnx
 # onnx-simplified

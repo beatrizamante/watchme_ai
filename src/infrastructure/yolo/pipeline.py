@@ -1,28 +1,16 @@
 from pathlib import Path
 
-from config import Settings
+from config import YOLOSettings
 from src.infrastructure.yolo.core.train import YOLOTrainer
 from src.infrastructure.yolo.core.tune import HyperparameterTuner
-
 
 class YOLOPipeline:
     """Complete YOLO training pipeline with resume support"""
 
-    def __init__(self, settings=None):
-        self.settings = settings if settings else Settings(
-            YOLO_MODEL_PATH="src/infrastructure/yolo/client/best.pt",
-            YOLO_EPOCHS=70,
-            YOLO_BATCH_SIZE=16,
-            YOLO_LEARNING_RATE=0.001,
-            YOLO_LOSS_FUNC="AdamW",
-            YOLO_DROPOUT=0.0,
-            YOLO_DEVICE=0,
-            YOLO_DATASET_PATH="src/dataset/yolo/dataset.yml",
-            YOLO_PROJECT_PATH="src/dataset/yolo/runs/detect",
-        )
-
-        self.trainer = YOLOTrainer(self.settings)
-        self.tuner = HyperparameterTuner(self.settings)
+    def __init__(self):
+        self.settings = YOLOSettings()
+        self.trainer = YOLOTrainer()
+        self.tuner = HyperparameterTuner()
         self.baseline_weights = None
         self.best_hyperparams = None
         self.final_results = None
@@ -32,8 +20,12 @@ class YOLOPipeline:
         baseline_dir = Path(self.settings.YOLO_PROJECT_PATH) / "baseline_train"
         best_weights_path = baseline_dir / "weights" / "best.pt"
 
+        model_path = Path(self.settings.YOLO_MODEL_PATH)
+
         if best_weights_path.exists():
             return True, str(best_weights_path)
+        elif model_path.exists():
+            return True, str(model_path)
         return False, None
 
     def run(self):

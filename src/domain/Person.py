@@ -1,4 +1,5 @@
-from typing import List, TypeAlias
+from typing import List
+from typing_extensions import TypeAlias
 
 from pydantic import BaseModel
 

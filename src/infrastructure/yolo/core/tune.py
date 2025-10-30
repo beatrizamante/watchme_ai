@@ -6,14 +6,14 @@ import ray
 from ray import tune
 from ray.tune.error import TuneError
 
+from config import YOLOSettings
 from src.infrastructure.yolo.client.model import yolo_client
 
 
 class HyperparameterTuner:
     """Handle hyperparameter tuning with Ray Tune (with resume support)"""
-
-    def __init__(self, settings):
-        self.settings = settings
+    def __init__(self):
+        self.settings = YOLOSettings()
         self.best_params = None
         self.model = None
 

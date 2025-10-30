@@ -4,16 +4,15 @@ from pathlib import Path
 
 import torchreid
 
-from config import osnet_settings
-from src.infrastructure.osnet.client.model import OsnetModel
-
+from config import OSNetSettings
+from src.infrastructure.osnet.client.model import OSNetModel
 
 class OSNetTrainer:
     """Handle OSNet training operations."""
 
     def __init__(self):
-        self.settings = osnet_settings
-        self.osnet_client = OsnetModel()
+        self.settings = OSNetSettings()
+        self.osnet_client = OSNetModel()
         self.datamanager = None
         self.model = None
         self._initialize_components()
@@ -94,8 +93,6 @@ class OSNetTrainer:
             eval_freq=self.settings.OSNET_EVAL_FREQ,
             print_freq=self.settings.OSNET_PRINT_FREQ,
             test_only=False,
-            visrank=True,
-            visrank_topk=10,
         )
 
         try:
@@ -117,5 +114,5 @@ class OSNetTrainer:
     def get_best_model_path(self):
         """Get path to the best saved model."""
         save_dir = Path(self.settings.OSNET_SAVE_DIR)
-        model_path = save_dir / "model.pth.tar"
+        model_path = save_dir / self.settings.OSNET_MODEL_NAME
         return str(model_path) if model_path.exists() else None

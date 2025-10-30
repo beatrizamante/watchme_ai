@@ -1,9 +1,8 @@
 import torchreid
 import torch
 
-from config import osnet_settings
-
-class OsnetModel:
+from config import OSNetSettings
+class OSNetModel:
     """
     A wrapper class for creating and managing an OSNet model and its data manager using torchreid.
     Attributes:
@@ -11,11 +10,11 @@ class OsnetModel:
         datamanager: The torchreid data manager instance.
         settings: Configuration settings for OSNet.
     """
-    
+
     def __init__(self):
         self.model = None
         self.datamanager = None
-        self.settings = osnet_settings
+        self.settings = OSNetSettings()
 
     def create_osnet_model(self, num_classes=None):
         """
@@ -27,7 +26,7 @@ class OsnetModel:
             model: OSNet model instance
         """
         self.model = torchreid.models.build_model(
-            name='osnet_x1_0',
+            name='osnet_ibn_x1_0',
             num_classes=num_classes or self.settings.OSNET_NUM_CLASSES,
             loss='triplet',
         )
@@ -51,9 +50,11 @@ class OsnetModel:
             width=self.settings.OSNET_IMG_WIDTH,
             batch_size_train=self.settings.OSNET_BATCH_SIZE,
             batch_size_test=self.settings.OSNET_BATCH_SIZE,
-            transforms=['random_flip', 'random_crop', 'random_erase'],
+            transforms=['random_flip', 'random_crop', 'random_erase', 'color_jitter'],
             num_instances=self.settings.OSNET_NUM_INSTANCES,
             train_sampler='RandomIdentitySampler',
+            seq_len=8,
+            sample_method='evenly'
         )
 
         return self.datamanager

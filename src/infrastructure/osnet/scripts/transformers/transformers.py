@@ -1,7 +1,6 @@
 from torchvision import transforms
 import torch
 import numpy as np
-import cv2
 from PIL import Image
 
 def create_transforms(img_height, img_width):
