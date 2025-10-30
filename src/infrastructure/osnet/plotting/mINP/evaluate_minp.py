@@ -20,7 +20,7 @@ class OSNetmINPEvaluator:
         self.settings = OSNetSettings()
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.weights_path = Path("src/infrastructure/osnet/client/model.pth.tar")
-        self.dataset_name = "dukemtmcreid"
+        self.dataset_name = self.settings.OSNET_DATASET_NAME
         self.model = self.osnet_client.create_osnet_model(
             num_classes=self.settings.OSNET_NUM_CLASSES
         )

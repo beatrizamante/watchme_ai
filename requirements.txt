@@ -2,6 +2,8 @@ pydantic_settings
 torchreid
 pydantic
 ultralytics
+ray[tune]
+wandb
 pycryptodome
 ray
 tqdm
@@ -29,6 +31,7 @@ yapf
 isort==4.3.21
 imageio
 chardet
+
 # Export --------------------------------------
 # onnx
 # onnx-simplified

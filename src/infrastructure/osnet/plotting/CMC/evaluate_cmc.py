@@ -20,7 +20,7 @@ class OSNetCMCEvaluator:
         self.settings = OSNetSettings()
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.weights_path = self.settings.OSNET_SAVE_DIR,
-        self.dataset_name = "dukemtmcreid"
+        self.dataset_name = self.settings.OSNET_DATASET_NAME
         self.model = self.osnet_client.create_osnet_model(
             num_classes=self.settings.OSNET_NUM_CLASSES
         )
