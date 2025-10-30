@@ -19,7 +19,9 @@ def load_checkpoint(weights_path, device, model):
     state_dict = checkpoint['state_dict']
 
     state_dict = {k: v for k, v in state_dict.items()
-                  if not k.startswith('classifier')}
+                  if not k.startswith('classifier') and
+                     not k.endswith('running_mean') and
+                     not k.endswith('running_var')}
 
     model.load_state_dict(state_dict, strict=False)
     model.to(device)

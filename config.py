@@ -37,7 +37,7 @@ class OSNetSettings(BaseSettings):
     OSNET_PRINT_FREQ: int = Field(default=10, description="Print frequency during training")
     OSNET_DATASET_NAME: str = Field(default="dukemtmcreid", description="Name of the ReID dataset")
     OSNET_ROOT_DIR: str = Field(default="src/dataset/osnet", description="Directory to save OSNet results")
-    OSNET_SAVE_DIR: str = Field(default="src/insfrastructure/osnet/client", description="Directory to save OSNet results")
+    OSNET_SAVE_DIR: str = Field(default="src/infrastructure/osnet/client", description="Directory to save OSNet results")
     OSNET_MODEL_NAME: str = Field(default="model.pth.tar", description="Trained OSNet model name")
 
     model_config = SettingsConfigDict(env_file=".env.osnet", env_file_encoding="utf-8")
