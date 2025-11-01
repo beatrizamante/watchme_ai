@@ -10,6 +10,7 @@ from src.infrastructure.osnet.client.model import OSNetModel
 from src.infrastructure.osnet.plotting.shared.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.scripts.transformers.transformers import \
     create_transforms, preprocess_image
+
 class OSNetEncoder:
     """Handle OSNet encoding operations for person re-identification."""
 

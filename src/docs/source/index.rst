@@ -1,19 +1,54 @@
 .. watchme documentation master file, created by
    sphinx-quickstart on Sun Oct 26 15:13:49 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-watchme documentation
-=====================
+WatchMe AI Backend Documentation
+================================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+WatchMe AI Backend is a comprehensive person re-identification system that combines
+YOLO object detection with OSNet person re-identification for real-time video analytics.
 
 .. toctree::
-   :caption: Contents:
+   :maxdepth: 2
+   :caption: Introduction:
 
-   introduction
+   intro/about
+   intro/requirements
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started:
+
    usage/installation
    usage/quickstart
+   usage/configuration
+
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide:
+
+   guide/training
+   guide/inference
+   guide/api-endpoints
+   guide/video-processing
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference:
+
+   api/yolo
+   api/osnet
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples:
+
+   examples/basic-usage
+   examples/video-search
+   examples/websocket
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
