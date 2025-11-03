@@ -43,7 +43,6 @@ YOLO (You Only Look Once) integration for:
 * Fast person detection in images and videos
 * Accurate bounding box extraction and cropping
 * Batch processing support for multiple detections
-* Configurable confidence thresholds
 
 Security & Performance
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -92,7 +91,7 @@ Person & Video Management
 * List all person embeddings (``GET /people``)
 * Retrieve specific person data (``GET /person?id=:personId``)
 * Create person embeddings (``POST /person``)
-* Search for people in videos (``GET /person/search?id=:personId&videoId=:videoId``)
+* Search for people in videos (``GET /person/find?id=:personId&videoId=:videoId``)
 
 **Video Processing:**
 
@@ -152,28 +151,28 @@ The complete WatchMe system follows a microservices architecture pattern:
 
    ┌─────────────────────────────────────────────────────────────┐
    │                    WatchMe Frontend                         │
-   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-   │  │   File Upload   │  │  User Interface │  │ Video Player│ │
-   │  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+   │  │   File Upload   │  │  User Interface │  │ Video Player│  │
+   │  └─────────────────┘  └─────────────────┘  └─────────────┘  │
    └─────────────────────────────────────────────────────────────┘
                                    │
                                    │ HTTP/WebSocket
                                    ▼
    ┌─────────────────────────────────────────────────────────────┐
    │                    WatchMe API                              │
-   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-   │  │ Authentication  │  │ User Management │  │File Storage │ │
-   │  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+   │  │ Authentication  │  │ User Management │  │File Storage │  │
+   │  └─────────────────┘  └─────────────────┘  └─────────────┘  │
    └─────────────────────────────────────────────────────────────┘
                                    │
                                    │ HTTP/WebSocket
                                    ▼
    ┌─────────────────────────────────────────────────────────────┐
    │                 WatchMe AI Backend                          │
-   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-   │  │      YOLO       │  │     OSNet       │  │  WebSocket  │ │
-   │  │   Detection     │  │   Encoding      │  │  Protocol   │ │
-   │  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+   │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+   │  │      YOLO       │  │     OSNet       │  │  WebSocket  │  │
+   │  │   Detection     │  │   Encoding      │  │  Protocol   │  │
+   │  └─────────────────┘  └─────────────────┘  └─────────────┘  │
    └─────────────────────────────────────────────────────────────┘
 
 Data Flow

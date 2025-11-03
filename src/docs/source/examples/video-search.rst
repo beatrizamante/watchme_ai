@@ -36,7 +36,7 @@ Upload Reference Image and Search Video
 
    # Search in video file
    search_response = requests.post(
-       'http://localhost:5000/find/person123',
+       'http://localhost:5000/find',
        json={
            'person': {'embed': embedding},
            'video_path': '/path/to/video.mp4'

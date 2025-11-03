@@ -77,21 +77,24 @@ Find Person in Video
 
 Search for a person in a video using their embedding.
 
-**Endpoint:** ``POST /find/{personId}``
-
-**Path Parameters:**
-
-- ``personId`` (string): Identifier for the person
+**Endpoint:** ``POST /find``
 
 **Request Body:**
 
 .. code-block:: json
 
    {
-     "person": {
-       "embed": "base64_encoded_encrypted_embedding"
-     },
-     "video_path": "/path/to/video.mp4"
+      "person": {
+        "id": number;
+        "name": string;
+        "user_id": number;
+        "embedding": Blob
+      },
+      "video": {
+        "id": number;
+        "user_id": number;
+        "path": string;
+      }
    }
 
 **Response:**
@@ -115,13 +118,17 @@ Search for a person in a video using their embedding.
 
 .. code-block:: bash
 
-   curl -X POST "http://localhost:5000/find/person123" \
+   curl -X POST "http://localhost:5000/find" \
         -H "Content-Type: application/json" \
         -d '{
           "person": {
-            "embed": "gAAAAABhN2K8..."
+            ...person,
+            "embedding": "gAAAAABhN2K8..."
           },
-          "video_path": "uploads/video.mp4"
+          "video": {
+            ...video,
+            "path": "uploads/video.mp4"
+          }
         }'
 
 WebSocket Endpoints
@@ -292,13 +299,12 @@ HTTP Endpoints
 ~~~~~~~~~~~~~~
 
 - No rate limiting currently implemented
-- Recommended: Implement rate limiting in production
 
 Request Limits
 ~~~~~~~~~~~~~~
 
-- Maximum image size: 50MB
-- Maximum video size: 500MB
+- Maximum image size: 100MB
+- Maximum video size: 100MB
 - Processing timeout: 300 seconds
 
 Integration Examples
@@ -322,52 +328,12 @@ Python Client
    embedding = response.json()['embedding']
    print(f"Generated embedding: {embedding[:50]}...")
 
-Node.js/TypeScript Client
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: typescript
-
-   import axios from 'axios';
-   import fs from 'fs';
-
-   // Upload person image
-   const imageBuffer = fs.readFileSync('person.jpg');
-   const imageBase64 = imageBuffer.toString('base64');
-
-   const response = await axios.post('http://localhost:5000/upload-embedding', {
-     image: imageBase64
-   });
-
-   const embedding = response.data.embedding;
-   console.log(`Generated embedding: ${embedding.substring(0, 50)}...`);
-
-Testing
--------
-
-Health Check
-~~~~~~~~~~~~
-
-.. code-block:: bash
-
-   curl -X GET "http://localhost:5000/health"
-
-Response:
-
-.. code-block:: json
-
-   {
-     "status": "healthy",
-     "version": "1.0.0",
-     "timestamp": "2025-11-02T15:30:00Z"
-   }
-
 API Documentation
 ~~~~~~~~~~~~~~~~~
 
 Interactive API documentation is available at:
 
 - Swagger UI: ``http://localhost:5000/docs``
-- ReDoc: ``http://localhost:5000/redoc``
 
 Performance Considerations
 --------------------------

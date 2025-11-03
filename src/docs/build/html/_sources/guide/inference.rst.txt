@@ -17,351 +17,174 @@ The system is designed for both batch processing and real-time inference scenari
 YOLO Inference
 --------------
 
-Single Image Detection
+Bounding Box Detection
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-   from src.infrastructure.yolo.core.predict import YOLOPredictor
+    # python -m src.infrastructure.yolo.core;predict.py
+    def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> List[Dict[str, Any]]:
+        """
+        Runs object detection and returns both bounding boxes and cropped person images.
 
-   def detect_people_in_image():
-       predictor = YOLOPredictor()
+        Args:
+            images: Single image path/array or list of image paths/arrays to process.
 
-       # Load image and predict
-       results = predictor.predict("path/to/image.jpg")
+        Returns:
+            List of dictionaries containing detection results for each image.
+            Returns empty list if no detections found.
 
-       # Process results
-       for detection in results:
-           bbox = detection['bbox']  # [x1, y1, x2, y2]
-           confidence = detection['confidence']
-           class_name = detection['class_name']
-           cropped_image = detection['cropped_image']
+        Raises:
+            RuntimeError: If YOLO prediction fails.
+            ValueError: If input images are invalid.
+        """
+        settings = YOLOSettings()
+        model = yolo_client(settings.YOLO_MODEL_PATH) #Or YOLO(settings.YOLO_MODEL_PATH) to load the model
 
-           print(f"Found {class_name} at {bbox} with confidence {confidence:.3f}")
+        if not isinstance(images, list):
+            images = [images]
 
-       return results
+        try:
+            results = model.predict(
+                images,
+                stream=True,
+                conf=0.28,
+                classes=[0],
+                verbose=False,
+            )
 
-**Using the API endpoint:**
+            results_list = list(results)
 
-.. code-block:: python
+            if not results_list:
+                return []
 
-   import requests
-   import base64
+            bounding_boxes = get_bounding_boxes(images, results_list)
+            return bounding_boxes if bounding_boxes else []
 
-   # Encode image to base64
-   with open('person.jpg', 'rb') as f:
-       image_data = base64.b64encode(f.read()).decode()
+        except Exception as e:
+            raise RuntimeError(f"YOLO prediction failed: {str(e)}") from e
 
-   # Send to API
-   response = requests.post(
-       'http://localhost:5000/detect',
-       json={'image': image_data}
-   )
-
-   detections = response.json()['detections']
-   print(f"Found {len(detections)} people")
-
-Batch Image Processing
-~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   from pathlib import Path
-   import cv2
-
-   def batch_detect_people():
-       predictor = YOLOPredictor()
-       image_folder = Path("images/")
-
-       results = {}
-
-       for image_path in image_folder.glob("*.jpg"):
-           print(f"Processing {image_path.name}...")
-
-           detections = predictor.predict(str(image_path))
-           results[image_path.name] = detections
-
-           # Save visualization
-           image = cv2.imread(str(image_path))
-           for detection in detections:
-               bbox = detection['bbox']
-               x1, y1, x2, y2 = map(int, bbox)
-
-               # Draw bounding box
-               cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-               # Add confidence text
-               conf_text = f"{detection['confidence']:.2f}"
-               cv2.putText(image, conf_text, (x1, y1-10),
-                          cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-           # Save result
-           output_path = f"results/{image_path.name}"
-           cv2.imwrite(output_path, image)
-
-       return results
-
-Video Processing
-~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   import cv2
-
-   def process_video():
-       predictor = YOLOPredictor()
-
-       # Open video
-       cap = cv2.VideoCapture("input_video.mp4")
-
-       # Setup video writer
-       fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-       fps = int(cap.get(cv2.CAP_PROP_FPS))
-       width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-       height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-       out = cv2.VideoWriter('output_video.mp4', fourcc, fps, (width, height))
-
-       frame_number = 0
-       total_detections = 0
-
-       while True:
-           ret, frame = cap.read()
-           if not ret:
-               break
-
-           frame_number += 1
-
-           # Process every 5th frame for performance
-           if frame_number % 5 == 0:
-               detections = predictor.predict_frame(frame)
-               total_detections += len(detections)
-
-               # Draw detections
-               for detection in detections:
-                   bbox = detection['bbox']
-                   x1, y1, x2, y2 = map(int, bbox)
-
-                   cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
-                   conf_text = f"Person {detection['confidence']:.2f}"
-                   cv2.putText(frame, conf_text, (x1, y1-10),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-           # Write frame
-           out.write(frame)
-
-           # Progress update
-           if frame_number % 100 == 0:
-               print(f"Processed {frame_number} frames, found {total_detections} people")
-
-       # Cleanup
-       cap.release()
-       out.release()
-
-       print(f"Video processing complete. Total detections: {total_detections}")
-
-Real-time Webcam Detection
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   def real_time_detection():
-       predictor = YOLOPredictor()
-
-       # Open webcam
-       cap = cv2.VideoCapture(0)
-
-       if not cap.isOpened():
-           print("Error: Cannot open webcam")
-           return
-
-       print("Press 'q' to quit")
-
-       while True:
-           ret, frame = cap.read()
-           if not ret:
-               break
-
-           # Detect people
-           detections = predictor.predict_frame(frame)
-
-           # Draw results
-           for detection in detections:
-               bbox = detection['bbox']
-               x1, y1, x2, y2 = map(int, bbox)
-               confidence = detection['confidence']
-
-               # Draw bounding box
-               color = (0, 255, 0) if confidence > 0.7 else (0, 255, 255)
-               cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-
-               # Draw confidence
-               text = f"Person {confidence:.2f}"
-               cv2.putText(frame, text, (x1, y1-10),
-                          cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
-           # Show frame
-           cv2.imshow('Real-time Person Detection', frame)
-
-           # Exit on 'q'
-           if cv2.waitKey(1) & 0xFF == ord('q'):
-               break
-
-       cap.release()
-       cv2.destroyAllWindows()
 
 OSNet Inference
 ---------------
 
-Single Image Embedding
-~~~~~~~~~~~~~~~~~~~~~~
+Load Model
+~~~~~~~~~~
 
 .. code-block:: python
 
-   from src.infrastructure.osnet.core.encode import OSNetEncoder
+    # python -m src.infrastructure.osnet.script.load_checkpoint
 
-   def create_person_embedding():
-       encoder = OSNetEncoder()
+    def load_checkpoint(weights_path, device, model):
+        """
+        Load a pre-trained model checkpoint and prepare it for inference.
+        Args:
+            weights_path (str): Path to the checkpoint file containing the model weights.
+            device (torch.device): Device to load the model onto (e.g., 'cpu' or 'cuda').
+            model (torch.nn.Module): The model instance to load the weights into.
+        Returns:
+            torch.nn.Module: The model with loaded weights, moved to the specified device
+                            and set to evaluation mode.
+        Note:
+            This function assumes the checkpoint is in Torchreid format with weights
+            stored under the 'state_dict' key. Modify accordingly for other formats.
+            Uses strict=False when loading state dict to allow partial loading.
+        """
+        checkpoint = torch.load(weights_path, map_location=device, weights_only=False)
+        state_dict = checkpoint['state_dict']
 
-       # Load and encode image
-       embedding = encoder.encode_single_image("person.jpg")
+        state_dict = {k: v for k, v in state_dict.items()
+                      if not k.startswith('classifier') and
+                         not k.endswith('running_mean') and
+                         not k.endswith('running_var')}
 
-       print(f"Generated embedding shape: {embedding.shape}")
-       print(f"Embedding type: {embedding.dtype}")
+        model.load_state_dict(state_dict, strict=False)
+        model.to(device)
+        model.eval()
+        return model
 
-       return embedding
-
-**Using the API endpoint:**
-
-.. code-block:: python
-
-   import requests
-   import base64
-
-   # Upload image and get embedding
-   with open('person.jpg', 'rb') as f:
-       image_data = base64.b64encode(f.read()).decode()
-
-   response = requests.post(
-       'http://localhost:5000/upload-embedding',
-       json={'image': image_data}
-   )
-
-   if response.status_code == 200:
-       result = response.json()
-       embedding = result['embedding']  # Base64 encoded
-       shape = result['shape']
-       print(f"Embedding created with shape: {shape}")
-   else:
-       print(f"Error: {response.json()['detail']}")
-
-Batch Embedding Generation
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Person Embedding
+~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-   from pathlib import Path
-   import numpy as np
+    # python -m src.infrastructure.osnet.core.encode
+    class OSNetEncoder:
+        """Handle OSNet encoding operations for person re-identification."""
 
-   def batch_generate_embeddings():
-       encoder = OSNetEncoder()
-       image_folder = Path("person_images/")
+        def __init__(self):
+            self.osnet_client = OSNetModel()
+            self.settings = OSNetSettings()
+            self.model = self.osnet_client.create_osnet_model(
+                num_classes=self.settings.OSNET_NUM_CLASSES
+            )
+            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            self.weights_path = Path(self.settings.OSNET_SAVE_DIR, self.settings.OSNET_MODEL_NAME)
+            self.transform = create_transforms(self.settings.OSNET_IMG_HEIGHT,
+                                               self.settings.OSNET_IMG_WIDTH)
+            self._load_model()
 
-       embeddings = {}
+        def _load_model(self):
+            """Load the OSNet model with pre-trained weights."""
+            self.model = load_checkpoint(self.weights_path, self.device, self.model)
+            print("OSNet model loaded successfully")
 
-       for image_path in image_folder.glob("*.jpg"):
-           person_id = image_path.stem  # Use filename as ID
-           print(f"Processing {person_id}...")
+        def encode_single_image(self, image):
+            """
+            Encode a single image to feature vector.
 
-           try:
-               embedding = encoder.encode_single_image(str(image_path))
-               embeddings[person_id] = embedding
-               print(f"✓ Generated embedding for {person_id}")
+            Args:
+                image: Input image (PIL Image, numpy array, or tensor)
 
-           except Exception as e:
-               print(f"✗ Failed to process {person_id}: {e}")
+            Returns:
+                numpy.ndarray: Feature vector (1D array)
+            """
 
-       # Save embeddings
-       np.savez_compressed("person_embeddings.npz", **embeddings)
-       print(f"Saved {len(embeddings)} embeddings")
+            image_tensor = preprocess_image(image, self.transform)
+            image_tensor = image_tensor.to(self.device)
 
-       return embeddings
+            with torch.no_grad():
+                features = self.model(image_tensor)
 
-Person Gallery Creation
-~~~~~~~~~~~~~~~~~~~~~~~
+                if isinstance(features, tuple):
+                    features = features[0]
 
-.. code-block:: python
+                features = torch.nn.functional.normalize(features, p=2, dim=1)
+                features = features.cpu().numpy().flatten()
 
-   import json
-   from src._lib.encrypt import encrypt_embedding, decrypt_embedding
+            return features
 
-   class PersonGallery:
-       def __init__(self):
-           self.encoder = OSNetEncoder()
-           self.gallery = {}
+        def encode_batch(self, images):
+            """
+            Encode a batch of images to feature vectors.
 
-       def add_person(self, person_id, image_path, metadata=None):
-           """Add a person to the gallery"""
-           try:
-               # Generate embedding
-               embedding = self.encoder.encode_single_image(image_path)
+            Args:
+                images: List of images (PIL Images, numpy arrays, or tensors)
 
-               # Encrypt embedding
-               encrypted_embedding = encrypt_embedding(embedding)
+            Returns:
+                numpy.ndarray: Feature matrix (num_images x feature_dim)
+            """
+            if not images:
+                return np.array([])
 
-               # Store in gallery
-               self.gallery[person_id] = {
-                   'embedding': encrypted_embedding,
-                   'image_path': image_path,
-                   'metadata': metadata or {},
-                   'created_at': datetime.now().isoformat()
-               }
+            image_tensors = []
+            for image in images:
+                tensor = preprocess_image(image, self.transform)
+                image_tensors.append(tensor.squeeze(0))
 
-               print(f"✓ Added {person_id} to gallery")
-               return True
+            batch_tensor = torch.stack(image_tensors).to(self.device)
 
-           except Exception as e:
-               print(f"✗ Failed to add {person_id}: {e}")
-               return False
+            with torch.no_grad():
+                features = self.model(batch_tensor)
 
-       def save_gallery(self, filepath):
-           """Save gallery to file"""
-           gallery_data = {}
+                if isinstance(features, tuple):
+                    features = features[0]
 
-           for person_id, data in self.gallery.items():
-               gallery_data[person_id] = {
-                   'embedding': base64.b64encode(data['embedding']).decode(),
-                   'image_path': data['image_path'],
-                   'metadata': data['metadata'],
-                   'created_at': data['created_at']
-               }
+                features = torch.nn.functional.normalize(features, p=2, dim=1)
+                features = features.cpu().numpy()
 
-           with open(filepath, 'w') as f:
-               json.dump(gallery_data, f, indent=2)
+            return features
 
-           print(f"Gallery saved to {filepath}")
-
-       def load_gallery(self, filepath):
-           """Load gallery from file"""
-           with open(filepath, 'r') as f:
-               gallery_data = json.load(f)
-
-           for person_id, data in gallery_data.items():
-               self.gallery[person_id] = {
-                   'embedding': base64.b64decode(data['embedding']),
-                   'image_path': data['image_path'],
-                   'metadata': data['metadata'],
-                   'created_at': data['created_at']
-               }
-
-           print(f"Loaded {len(self.gallery)} people from gallery")
-
-   # Usage
-   gallery = PersonGallery()
-   gallery.add_person("john_doe", "images/john.jpg", {"name": "John Doe", "age": 30})
-   gallery.add_person("jane_smith", "images/jane.jpg", {"name": "Jane Smith", "age": 25})
-   gallery.save_gallery("person_gallery.json")
 
 Combined Pipeline
 -----------------
@@ -371,27 +194,40 @@ Complete Person Search
 
 .. code-block:: python
 
-   from src.application.use_cases.predict_person import predict_person_on_stream
-   from src._lib.encrypt import decrypt_embedding
+    encoder = OSNetEncoder()
 
-   def search_person_in_video():
-       # Step 1: Create reference embedding
-       encoder = OSNetEncoder()
-       reference_embedding = encoder.encode_single_image("reference_person.jpg")
+    def predict_person_on_stream(chosen_person, stream):
+        """
+        Compare the chosen person's embedding to all detected people in the video stream.
+        Args:
+            chosen_person: Encrypted embedding of the target person.
+            stream: Video frame(s) or stream to process.
+        Returns:
+            List of matching bounding boxes.
+        """
+        people_results = predict(stream)
+        all_cropped_images = []
+        all_bboxes = []
 
-       # Step 2: Search in video
-       predictor = YOLOPredictor()
-       cap = cv2.VideoCapture("search_video.mp4")
+        for frame_result in people_results:
+            for detection in frame_result['detections']:
+                all_cropped_images.append(detection['cropped_image'])
+                all_bboxes.append(detection['bbox'])
 
-       matches = []
-       frame_number = 0
+        if not all_cropped_images:
+            return []
 
-       while True:
-           ret, frame = cap.read()
-           if not ret:
-               break
+        decrypted_embedding = decrypt_embedding(chosen_person, shape=(512,), dtype='float32')
 
-           frame_number += 1
+        encoded_batch = encoder.encode_batch(all_cropped_images)
+        matches = []
 
-           # Detect people in frame
-           detections = predictor.predict_frame(frame)
+        for i, encoded_person in enumerate(encoded_batch):
+            distance = compute_euclidean_distance(decrypted_embedding, encoded_person)
+            if distance < 0.8:
+                matches.append({
+                    "bbox": all_bboxes[i],
+                    "distance": distance
+                })
+
+        return matches

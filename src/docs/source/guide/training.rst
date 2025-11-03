@@ -72,7 +72,7 @@ Example for person detection (class 0 = person):
    0 0.456 0.392 0.123 0.654
    0 0.789 0.123 0.087 0.456
 
-**Configuration File (`data.yaml`):**
+**Configuration File (`dataset.yaml`):**
 
 .. code-block:: yaml
 
@@ -85,57 +85,144 @@ Example for person detection (class 0 = person):
    nc: 1  # number of classes
    names: ['person']  # class names
 
+You can use the script ``annotation_to_txt.py`` to turn a JSON annotation file into a list of .txt
+
+
+.. code-block:: python
+
+    coco_json = "src/dataset/yolo/labels/instances_val2017.json" #JSON file path
+    images_dir = "src/dataset/yolo/images/val" #Images directory (can be either val/train/test)
+    labels_dir = "src/dataset/yolo/labels/val" #Labels directory (can be either val/train/test)
+    os.makedirs(labels_dir, exist_ok=True)
+
+    with open(coco_json, "r", encoding="utf-8") as f:
+        coco = json.load(f)
+
+    images = {img["id"]: img for img in coco["images"]}
+
+    PERSON_CLASS_ID = 1
+
+    for ann in tqdm(coco["annotations"], desc="Converting"):
+        if ann["category_id"] != PERSON_CLASS_ID:
+            continue
+
+        img_info = images[ann["image_id"]]
+        img_w, img_h = img_info["width"], img_info["height"]
+
+        x, y, w, h = ann["bbox"]
+        x_center = (x + w / 2) / img_w
+        y_center = (y + h / 2) / img_h
+        w /= img_w
+        h /= img_h
+
+        txt_name = os.path.splitext(img_info["file_name"])[0] + ".txt"
+        txt_path = os.path.join(labels_dir, txt_name)
+
+        with open(txt_path, "a", encoding="utf-8") as f_out:
+            f_out.write(f"0 {x_center:.6f} {y_center:.6f} {w:.6f} {h:.6f}\n")
+
+
 Training Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
 
 **Environment Variables:**
 
+This repository comes with a trained model in src/infrastructure/yolo/client/best.pt
+
 .. code-block:: bash
 
-   # .env
-   YOLO_DATASET_PATH=src/dataset/yolo
-   YOLO_PROJECT_PATH=src/infrastructure/yolo/projects
-   YOLO_MODEL_PATH=yolov11n.pt  # Base model
-   YOLO_EPOCHS=100
+   # .env.yolo
+   YOLO_MODEL_PATH=yolov11n.pt  # Base model (You can use best.pt)
    YOLO_BATCH_SIZE=16
-   YOLO_IMAGE_SIZE=640
-   YOLO_LEARNING_RATE=0.01
+   YOLO_LEARNING_RATE=0.001
+   YOLO_LOSS_FUNC=AdamW
+   YOLO_DROPOUT=0.0
+   YOLO_DEVICE=0
+   YOLO_DATASET_PATH=src/dataset/yolo/dataset.yml
+   YOLO_PROJECT_PATH=src/dataset/yolo/runs/detect
+
 
 **Training Script:**
 
 .. code-block:: python
 
-   # python -m src.infrastructure.yolo.scripts.train
+   # python -m src.infrastructure.yolo.core.train
 
-   from src.infrastructure.yolo.core.train import YOLOTrainer
-   from config import YOLOSettings
+    class YOLOTrainer:
+        """Handle YOLO training operations"""
 
-   def main():
-       settings = YOLOSettings()
-       trainer = YOLOTrainer()
+        def __init__(self):
+            self.settings = YOLOSettings()
+            self.model = None
+            self.results = None
 
-       # Train the model
-       trainer.train(
-           data_config=settings.YOLO_DATASET_PATH + "/data.yaml",
-           epochs=settings.YOLO_EPOCHS,
-           batch_size=settings.YOLO_BATCH_SIZE,
-           image_size=settings.YOLO_IMAGE_SIZE,
-           project=settings.YOLO_PROJECT_PATH,
-           name="person_detection"
-       )
+        def load_model(self, weights=None):
+            """Load YOLO model"""
+            self.model = yolo_client(weights) #You can just call an YOLO object
+            print(f"✓ Model loaded: {getattr(self.model, 'baseline_weights', 'Unknown path')}")
+            return self.model
 
-   if __name__ == "__main__":
-       main()
+        def train(self, weights=None, hyperparams=None):
+            """
+            Trains the YOLO model using the specified weights and hyperparameters.
+            Args:
+                weights (str or None): Path to the pretrained weights file. If None, uses default weights.
+                hyperparams (dict or None): Dictionary of hyperparameters to override defaults. Supported keys include:
+                    - "box" (int): Box loss gain.
+                    - "cls" (float): Class loss gain.
+                    - "lr0" (float): Initial learning rate.
+                    - "dropout" (float): Dropout rate.
+            Raises:
+                ValueError: If the YOLO model fails to load or does not have a 'train' method.
+            Returns:
+                Any: Training results returned by the YOLO model's train method.
+            """
+            self.load_model(weights)
+            if self.model is None or not hasattr(self.model, "train"):
+                raise ValueError("Failed to load YOLO model or 'train' method not found.")
+
+            hp = hyperparams if hyperparams else {}
+            box = hp.get("box", 8)
+            cls = hp.get("cls", 0.5)
+            lr0 = hp.get("lr0", self.settings.YOLO_LEARNING_RATE)
+            dropout = hp.get("dropout", self.settings.YOLO_DROPOUT)
+
+            self.results = self.model.train(
+                data=self.settings.YOLO_DATASET_PATH,
+                project=self.settings.YOLO_PROJECT_PATH,
+                name="baseline_train",
+                multi_scale=True,
+                amp=True,
+                freeze=5,
+                box=box,
+                cls=cls,
+                epochs=self.settings.YOLO_EPOCHS,
+                batch=self.settings.YOLO_BATCH_SIZE,
+                optimizer=self.settings.YOLO_LOSS_FUNC,
+                lr0=lr0,
+                dropout=dropout,
+                imgsz=640,
+                device=self.settings.YOLO_DEVICE,
+            )
+
+            return self.results
+
+        def get_best_weights_path(self):
+            """Get path to best weights from last training"""
+            if self.results is None:
+                raise ValueError("No training results available. Train model first.")
+            return os.path.join(str(self.results.save_dir), "weights", "best.pt")
+
 
 **Advanced Training Options:**
 
 .. code-block:: python
 
    trainer.train(
-       data_config="src/dataset/yolo/data.yaml",
+       data="src/dataset/yolo/dataset.yaml",
        epochs=200,
-       batch_size=32,
-       image_size=640,
+       batch=32,
+       imgsz=640,
        project="src/infrastructure/yolo/projects",
        name="advanced_person_detection",
 
@@ -191,65 +278,173 @@ Hyperparameter Tuning
 
 .. code-block:: python
 
-   from src.infrastructure.yolo.core.tune import HyperparameterTuner
+    # python -m src.infrastructure.yolo.core.tune
+    class HyperparameterTuner:
+        """Handle hyperparameter tuning with Ray Tune (with resume support)"""
+        def __init__(self):
+            self.settings = YOLOSettings()
+            self.best_params = None
+            self.model = None
 
-   def tune_hyperparameters():
-       tuner = HyperparameterTuner()
+        def _get_search_space(self):
+            """Define hyperparameter search space for YOLO training"""
+            return {
+                "lr0": tune.uniform(1e-5, 1e-2),
+                "momentum": tune.uniform(0.6, 0.98),
+                "box": tune.uniform(0.02, 0.2),
+                "cls": tune.uniform(0.1, 2.0),
+                "hsv_s": tune.uniform(0.0, 0.9),
+                "hsv_v": tune.uniform(0.0, 0.9),
+                "degrees": tune.uniform(0.0, 45.0),
+                "translate": tune.uniform(0.0, 0.9),
+                "scale": tune.uniform(0.0, 0.9),
+                "shear": tune.uniform(0.0, 10.0),
+                "dropout": tune.uniform(0.0, 0.3),
+            }
 
-       # Define search space
-       search_space = {
-           "lr0": (0.0001, 0.1),          # Learning rate range
-           "batch_size": [16, 32, 64],     # Batch size options
-           "optimizer": ["SGD", "Adam", "AdamW"],  # Optimizer options
-           "weight_decay": (0.0001, 0.001),  # Weight decay range
-           "momentum": (0.8, 0.95),        # Momentum range
-       }
+        def _check_for_checkpoint(self):
+            """Check if there's an existing ray_tune checkpoint to resume from"""
+            ray_tune_dir = Path(self.settings.YOLO_PROJECT_PATH) / "ray_tune"
+            if ray_tune_dir.exists() and any(ray_tune_dir.iterdir()):
+                return True
+            return False
 
-       # Run tuning
-       best_config = tuner.tune(
-           data_config="src/dataset/yolo/data.yaml",
-           search_space=search_space,
-           num_samples=20,  # Number of trials
-           max_epochs=50,   # Max epochs per trial
-           gpus_per_trial=1
-       )
+        def tune(self, baseline_weights=None, iterations=5, epochs=20):
+            """
+            Tune hyperparameters using Ray Tune with resume support
 
-       print(f"Best configuration: {best_config}")
+            Args:
+                baseline_weights (str, optional): Path to baseline weights file (.pt)
+                iterations (int): Number of tuning trials to run
+                epochs (int): Number of epochs per trial
 
-   if __name__ == "__main__":
-       tune_hyperparameters()
+            Returns:
+                ray.tune.ExperimentAnalysis: Results object containing best hyperparameters
 
-**Manual Grid Search:**
+            Raises:
+                RuntimeError: If Ray Tune encounters an error
+                TuneError: If there's an issue with the tuning process
+            """
+            try:
+                if ray.is_initialized():
+                    ray.shutdown()
+
+                ray.init(
+                    ignore_reinit_error=True,
+                    num_cpus=8,
+                    num_gpus=1 if self.settings.YOLO_DEVICE != "cpu" else 0
+                )
+
+                self.model = yolo_client(baseline_weights)
+                resume_checkpoint = self._check_for_checkpoint()
+                search_space = self._get_search_space()
+
+                results = self.model.tune(
+                    data=self.settings.YOLO_DATASET_PATH,
+                    use_ray=True,
+                    space=search_space,
+                    epochs=epochs,
+                    iterations=iterations,
+                    grace_period=10,
+                    gpu_per_trial=1 if self.settings.YOLO_DEVICE != 'cpu' else 0,
+                    project=self.settings.YOLO_PROJECT_PATH,
+                    name="ray_tune",
+                    resume=resume_checkpoint
+                )
+
+                self.best_params = results.get_results()
+                return results
+
+            except (RuntimeError, TuneError) as e:
+                print(f"Error during model tuning: {e}")
+                raise e
+            finally:
+                if ray.is_initialized():
+                    ray.shutdown()
+
+        def get_best_params(self):
+            """Get the best hyperparameters from the last tuning run"""
+            return self.best_params
+
+
+**Tune/Training Pipeline:**
 
 .. code-block:: python
 
-   learning_rates = [0.001, 0.01, 0.1]
-   batch_sizes = [16, 32, 64]
+    # python -m src.infrastructure.yolo.pipeline
+    class YOLOPipeline:
+        """Complete YOLO training pipeline with resume support"""
 
-   best_map = 0
-   best_config = None
+        def __init__(self):
+            self.settings = YOLOSettings()
+            self.trainer = YOLOTrainer()
+            self.tuner = HyperparameterTuner()
+            self.baseline_weights = None
+            self.best_hyperparams = None
+            self.final_results = None
 
-   for lr in learning_rates:
-       for batch_size in batch_sizes:
-           print(f"Training with lr={lr}, batch_size={batch_size}")
+        def _check_for_baseline_weights(self):
+            """Check if there's an existing baseline weights to resume from"""
+            baseline_dir = Path(self.settings.YOLO_PROJECT_PATH) / "baseline_train"
+            best_weights_path = baseline_dir / "weights" / "best.pt"
 
-           results = trainer.train(
-               data_config="src/dataset/yolo/data.yaml",
-               epochs=50,
-               lr0=lr,
-               batch_size=batch_size,
-               project="src/infrastructure/yolo/projects",
-               name=f"tune_lr{lr}_bs{batch_size}"
-           )
+            model_path = Path(self.settings.YOLO_MODEL_PATH)
 
-           # Extract mAP from results
-           map_score = results.results_dict['metrics/mAP50(B)']
+            if best_weights_path.exists():
+                return True, str(best_weights_path)
+            elif model_path.exists():
+                return True, str(model_path)
+            return False, None
 
-           if map_score > best_map:
-               best_map = map_score
-               best_config = {'lr': lr, 'batch_size': batch_size}
+        def run(self):
+            """
+            Run complete pipeline: baseline training -> tuning -> final training
+            """
+            print("="*60)
+            print("YOLO Training & Hyperparameter Tuning Pipeline")
+            print("="*60)
 
-   print(f"Best config: {best_config} with mAP: {best_map}")
+            has_baseline, baseline_path = self._check_for_baseline_weights()
+
+            if not has_baseline:
+                print("\n[1/3] Training baseline model...")
+                print("-" * 60)
+
+                baseline_results = self.trainer.train()
+
+                if baseline_results and hasattr(baseline_results, 'save_dir'):
+                    self.baseline_weights = self.trainer.get_best_weights_path()
+                    print(f"✓ Baseline training completed: {self.baseline_weights}")
+                else:
+                    raise RuntimeError("Training failed or returned invalid results")
+            else:
+                print(f"\n[1/3] Found existing baseline weights: {baseline_path}")
+                self.baseline_weights = baseline_path
+
+            print("\n[2/3] Running hyperparameter tuning...")
+            print("-" * 60)
+            tune_results = self.tuner.tune(
+                baseline_weights=self.baseline_weights,
+            )
+
+            self.best_hyperparams = tune_results.get_best_result().config
+            print(f"✓ Best hyperparameters found: {self.best_hyperparams}")
+
+            print("\n[3/3] Final training with optimized hyperparameters...")
+            print("-" * 60)
+            self.final_results = self.trainer.train(
+                weights=self.baseline_weights,
+                hyperparams=self.best_hyperparams
+            )
+
+            print("\n" + "="*60)
+            print("Pipeline completed successfully!")
+            print(f"Baseline weights: {self.baseline_weights}")
+            print(f"Final model: {self.final_results.save_dir}")
+            print("="*60)
+
+            return self.final_results
+
 
 OSNet Training
 --------------
@@ -261,23 +456,22 @@ Dataset Preparation
 
 .. code-block:: text
 
-   src/dataset/osnet/
-   ├── bounding_box_train/
-   │   ├── 0001_c1s1_000151_01.jpg  # ID_camera_sequence_frame
-   │   ├── 0001_c1s1_000376_03.jpg
-   │   ├── 0002_c1s1_000301_01.jpg
-   │   └── ...
-   ├── bounding_box_test/
-   │   ├── 0001_c2s1_001976_01.jpg
-   │   ├── 0001_c4s1_002501_01.jpg
-   │   └── ...
-   ├── query/
-   │   ├── 0001_c1s1_001051_00.jpg
-   │   ├── 0002_c1s1_000776_00.jpg
-   │   └── ...
-   └── gt_bbox/  # Optional: ground truth bounding boxes
-       ├── 0001_c1s1_000151_01.txt
-       └── ...
+    src/dataset/osnet/dukemtmc-vidreid/
+    ├── tracklet_train/
+    │   ├── 0001/
+    │   │   ├── 0001_c1s1_000151_01.jpg
+    │   │   └── ...
+    │   └── ...
+    ├── tracklet_test/
+    │   ├── 0001/
+    │   │   ├── 0001_c2s1_001976_01.jpg
+    │   │   └── ...
+    │   └── ...
+    ├── query/
+    │   ├── 0001/
+    │   │   ├── 0001_c1s1_001051_00.jpg
+    │   │   └── ...
+    │   └── ...
 
 **Filename Convention:**
 
@@ -295,17 +489,17 @@ Dataset Preparation
 
    # src/infrastructure/osnet/core/train.py
 
-   data_config = {
-       'root': 'src/dataset/osnet',
-       'sources': ['market1501'],  # Dataset type
-       'targets': ['market1501'],
-       'height': 256,              # Image height
-       'width': 128,               # Image width
-       'combineall': False,        # Combine train and test for training
-       'transforms': ['random_flip', 'random_crop', 'normalize'],
-       'k_tfm': 1,                # Number of transform versions per image
-       'load_train_targets': False
-   }
+    data_config = {
+        'root': 'src/dataset/osnet',
+        'sources': ['dukemtmcvidreid'],  # Use the correct dataset name
+        'targets': ['dukemtmcvidreid'],
+        'height': 256,
+        'width': 128,
+        'combineall': False,
+        'transforms': ['random_flip', 'random_crop', 'normalize'],
+        'k_tfm': 1,
+        'load_train_targets': False
+    }
 
 Training Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -314,86 +508,132 @@ Training Configuration
 
 .. code-block:: bash
 
-   # .env
-   OSNET_DATASET_PATH=src/dataset/osnet
-   OSNET_SAVE_DIR=src/infrastructure/osnet/client
-   OSNET_NUM_CLASSES=751        # Number of unique person IDs
-   OSNET_EPOCHS=100
-   OSNET_BATCH_SIZE=32
-   OSNET_LEARNING_RATE=0.00035
-   OSNET_ARCHITECTURE=osnet_x1_0
+    # .env.osnet
+    OSNET_EPOCHS=250
+    OSNET_LEARNING_RATE=0.0003
+    OSNET_WEIGHT_DECAY=0.0005
+    OSNET_BATCH_SIZE=32
+    OSNET_OPTIMIZER=adam
+    OSNET_NUM_CLASSES=751        # Number of unique person IDs
+    OSNET_IMG_HEIGHT=256
+    OSNET_IMG_WIDTH=128
+    OSNET_NUM_INSTANCES=4
+    OSNET_MARGIN=0.3
+    OSNET_STEPSIZE=20
+    OSNET_EVAL_FREQ=30
+    OSNET_PRINT_FREQ=10
+    OSNET_DATASET_NAME=dukemtmcvidreid
+    OSNET_ROOT_DIR=src/dataset/osnet
+    OSNET_SAVE_DIR=src/infrastructure/osnet/client
+    OSNET_MODEL_NAME=model.pth.tar
 
 **Training Script:**
 
 .. code-block:: python
 
-   # python -m src.infrastructure.osnet.scripts.train
+   # python -m src.infrastructure.osnet.core.train
 
-   import torchreid
-   from src.infrastructure.osnet.core.train import OSNetTrainer
-   from config import OSNetSettings
+    class OSNetTrainer:
+        """Handle OSNet training operations."""
 
-   def main():
-       settings = OSNetSettings()
-       trainer = OSNetTrainer()
+        def __init__(self):
+            self.settings = OSNetSettings()
+            self.osnet_client = OSNetModel()
+            self.datamanager = None
+            self.model = None
+            self._initialize_components()
 
-       # Configure data manager
-       datamanager = torchreid.data.ImageDataManager(
-           root=settings.OSNET_DATASET_PATH,
-           sources='market1501',
-           targets='market1501',
-           height=256,
-           width=128,
-           batch_size_train=settings.OSNET_BATCH_SIZE,
-           batch_size_test=100,
-           transforms=['random_flip', 'random_crop', 'normalize'],
-           num_instances=4,          # Number of instances per identity in a batch
-           train_sampler='RandomIdentitySampler'
-       )
+        def _initialize_components(self):
+            """Initialize datamanager and model."""
+            self.datamanager = self.osnet_client.create_datamanager()
+            num_train_pids = self.datamanager.num_train_pids
+            self.model = self.osnet_client.create_osnet_model(num_classes=num_train_pids)
 
-       # Configure model
-       model = torchreid.models.build_model(
-           name=settings.OSNET_ARCHITECTURE,
-           num_classes=datamanager.num_train_pids,
-           loss='triplet',
-           pretrained=True
-       )
+        def train(self, weights=None, hp=None):
+            """
+            Train OSNet model with optional hyperparameters.
 
-       # Configure optimizer
-       optimizer = torchreid.optim.build_optimizer(
-           model,
-           optim='adam',
-           lr=settings.OSNET_LEARNING_RATE
-       )
+            Args:
+                weights: Path to pre-trained weights/checkpoint (optional)
+                hp: Dictionary of hyperparameters (optional)
 
-       # Configure scheduler
-       scheduler = torchreid.optim.build_lr_scheduler(
-           optimizer,
-           lr_scheduler='single_step',
-           stepsize=20
-       )
+            Returns:
+                results: Training results with metrics
+            """
+            max_epoch = (
+                hp.get("max_epoch", self.settings.OSNET_EPOCHS)
+                if hp
+                else self.settings.OSNET_EPOCHS
+            )
+            lr = (
+                hp.get("lr", self.settings.OSNET_LEARNING_RATE)
+                if hp
+                else self.settings.OSNET_LEARNING_RATE
+            )
+            weight_decay = (
+                hp.get("weight_decay", self.settings.OSNET_WEIGHT_DECAY)
+                if hp
+                else self.settings.OSNET_WEIGHT_DECAY
+            )
+            optimizer_name = (
+                hp.get("optimizer", self.settings.OSNET_OPTIMIZER)
+                if hp
+                else self.settings.OSNET_OPTIMIZER
+            )
 
-       # Configure engine
-       engine = torchreid.engine.ImageTripletEngine(
-           datamanager,
-           model,
-           optimizer=optimizer,
-           scheduler=scheduler,
-           label_smooth=True,
-       )
+            optimizer = torchreid.optim.build_optimizer(
+                self.model, optim=optimizer_name, lr=lr, weight_decay=weight_decay
+            )
 
-       # Start training
-       engine.run(
-           save_dir=settings.OSNET_SAVE_DIR,
-           max_epoch=settings.OSNET_EPOCHS,
-           eval_freq=10,
-           print_freq=20,
-           test_only=False,
-           resume='',  # Path to checkpoint to resume from
-       )
+            scheduler = torchreid.optim.build_lr_scheduler(
+                optimizer,
+                lr_scheduler="single_step",
+                stepsize=self.settings.OSNET_STEPSIZE,
+            )
 
-   if __name__ == "__main__":
-       main()
+            start_epoch = 0
+            if weights and Path(weights).exists():
+                print(f"Resuming from checkpoint: {weights}")
+                start_epoch = torchreid.utils.resume_from_checkpoint(
+                    weights, self.model, optimizer
+                )
+            elif weights:
+                print(f"Warning: Checkpoint not found at {weights}, starting from scratch")
+            else:
+                print("No checkpoint provided, starting from scratch")
+
+            engine = torchreid.engine.VideoTripletEngine(
+                self.datamanager,
+                self.model,
+                optimizer=optimizer,
+                scheduler=scheduler,
+                label_smooth=True,
+                margin=self.settings.OSNET_MARGIN,
+            )
+
+            engine.run(
+                save_dir=self.settings.OSNET_SAVE_DIR,
+                max_epoch=max_epoch,
+                start_epoch=start_epoch,
+                start_eval=max_epoch // 2,
+                eval_freq=self.settings.OSNET_EVAL_FREQ,
+                print_freq=self.settings.OSNET_PRINT_FREQ,
+                test_only=False,
+            )
+
+            results = {
+                "save_dir": self.settings.OSNET_SAVE_DIR,
+                "final_epoch": max_epoch,
+            }
+
+            return results
+
+        def get_best_model_path(self):
+            """Get path to the best saved model."""
+            save_dir = Path(self.settings.OSNET_SAVE_DIR)
+            model_path = save_dir / self.settings.OSNET_MODEL_NAME
+            return str(model_path) if model_path.exists() else None
+
 
 **Advanced Training Configuration:**
 
@@ -413,7 +653,7 @@ Training Configuration
        ]
 
        # Multiple dataset sources
-       datamanager = torchreid.data.ImageDataManager(
+       datamanager = torchreid.data.VideoDataManager(
            root='src/dataset/osnet',
            sources=['market1501', 'dukemtmcreid'],  # Multiple datasets
            targets=['market1501', 'dukemtmcreid'],
@@ -488,102 +728,6 @@ Training Configuration
            resume='',               # Resume from checkpoint
        )
 
-Transfer Learning
-~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   # Fine-tune from pre-trained checkpoint
-
-   def transfer_learning():
-       # Load pre-trained model
-       model = torchreid.models.build_model(
-           name='osnet_x1_0',
-           num_classes=751,  # Original Market-1501 classes
-           pretrained=False
-       )
-
-       # Load pre-trained weights
-       checkpoint = torch.load('pretrained_osnet.pth.tar')
-       model.load_state_dict(checkpoint['state_dict'])
-
-       # Modify classifier for new dataset
-       num_new_classes = 500  # Your dataset's number of identities
-       model.classifier = nn.Linear(model.feature_dim, num_new_classes)
-
-       # Freeze backbone (optional)
-       for name, param in model.named_parameters():
-           if 'classifier' not in name:
-               param.requires_grad = False
-
-       # Continue with training setup...
-
-Monitoring Training Progress
-----------------------------
-
-TensorBoard Integration
-~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   # Monitor training with TensorBoard
-
-   # Start TensorBoard
-   # tensorboard --logdir=src/infrastructure/yolo/projects/runs
-
-   # For OSNet, logs are automatically saved to the save_dir
-   # tensorboard --logdir=src/infrastructure/osnet/client
-
-Weights & Biases Integration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   import wandb
-
-   # Initialize W&B
-   wandb.init(
-       project="watchme-training",
-       config={
-           "architecture": "osnet_x1_0",
-           "dataset": "market1501",
-           "epochs": 100,
-           "batch_size": 32,
-           "learning_rate": 0.00035
-       }
-   )
-
-   # Log metrics during training
-   wandb.log({
-       "epoch": epoch,
-       "loss": loss_value,
-       "rank1": rank1_accuracy,
-       "mAP": mean_average_precision
-   })
-
-Custom Logging
-~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   import logging
-   from datetime import datetime
-
-   # Setup custom logging
-   logging.basicConfig(
-       level=logging.INFO,
-       format='%(asctime)s - %(levelname)s - %(message)s',
-       handlers=[
-           logging.FileHandler(f'training_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
-           logging.StreamHandler()
-       ]
-   )
-
-   logger = logging.getLogger(__name__)
-
-   # Log training progress
-   logger.info(f"Epoch {epoch}/{max_epochs} - Loss: {loss:.4f} - Rank-1: {rank1:.2f}%")
-
 Model Evaluation
 ----------------
 
@@ -630,7 +774,7 @@ OSNet Evaluation
        model.load_state_dict(checkpoint['state_dict'])
 
        # Evaluate
-       engine = torchreid.engine.ImageTripletEngine(
+       engine = torchreid.engine.VideoTripletEngine(
            datamanager, model, optimizer, scheduler
        )
 
@@ -668,23 +812,5 @@ Hardware Optimization
 2. **Increase batch size** with available GPU memory
 3. **Use multiple GPUs** for distributed training when available
 4. **Monitor GPU utilization** to ensure efficient resource usage
-
-.. code-block:: python
-
-   # Mixed precision training example
-   from torch.cuda.amp import GradScaler, autocast
-
-   scaler = GradScaler()
-
-   for data in dataloader:
-       optimizer.zero_grad()
-
-       with autocast():
-           outputs = model(data)
-           loss = criterion(outputs, targets)
-
-       scaler.scale(loss).backward()
-       scaler.step(optimizer)
-       scaler.update()
 
 This comprehensive training guide provides everything needed to train custom models for the WatchMe AI Backend system, from basic setups to advanced configurations and optimization techniques.

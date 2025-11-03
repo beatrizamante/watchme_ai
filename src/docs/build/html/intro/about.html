@@ -118,11 +118,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#model-configuration">Model Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#yolo-settings">YOLO Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#osnet-settings">OSNet Settings</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#deployment-configuration">Deployment Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#development-environment">Development Environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#production-environment">Production Environment</a></li>
@@ -353,7 +348,6 @@
 <li><p>Fast person detection in images and videos</p></li>
 <li><p>Accurate bounding box extraction and cropping</p></li>
 <li><p>Batch processing support for multiple detections</p></li>
-<li><p>Configurable confidence thresholds</p></li>
 </ul>
 </section>
 <section id="security-performance">
@@ -403,7 +397,7 @@
 <li><p>List all person embeddings (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/people</span></code>)</p></li>
 <li><p>Retrieve specific person data (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/person?id=:personId</span></code>)</p></li>
 <li><p>Create person embeddings (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/person</span></code>)</p></li>
-<li><p>Search for people in videos (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/person/search?id=:personId&amp;videoId=:videoId</span></code>)</p></li>
+<li><p>Search for people in videos (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/person/find?id=:personId&amp;videoId=:videoId</span></code>)</p></li>
 </ul>
 <p><strong>Video Processing:</strong></p>
 <ul class="simple">
@@ -465,28 +459,28 @@
 <p>The complete WatchMe system follows a microservices architecture pattern:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
 │                    WatchMe Frontend                         │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-│  │   File Upload   │  │  User Interface │  │ Video Player│ │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+│  │   File Upload   │  │  User Interface │  │ Video Player│  │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                                 │
                                 │ HTTP/WebSocket
                                 ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    WatchMe API                              │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-│  │ Authentication  │  │ User Management │  │File Storage │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+│  │ Authentication  │  │ User Management │  │File Storage │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                                 │
                                 │ HTTP/WebSocket
                                 ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                 WatchMe AI Backend                          │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
-│  │      YOLO       │  │     OSNet       │  │  WebSocket  │ │
-│  │   Detection     │  │   Encoding      │  │  Protocol   │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
+│  │      YOLO       │  │     OSNet       │  │  WebSocket  │  │
+│  │   Detection     │  │   Encoding      │  │  Protocol   │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 </pre></div>
 </div>

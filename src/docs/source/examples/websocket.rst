@@ -448,7 +448,7 @@ Real-time Webcam Tracking
    }
 
 Python Async Example
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -627,7 +627,7 @@ Error Handling and Reconnection
 -------------------------------
 
 Robust WebSocket Implementation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 

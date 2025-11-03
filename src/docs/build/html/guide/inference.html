@@ -113,16 +113,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#environment-variables">Environment Variables</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#core-configuration">Core Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#ai-model-configuration">AI Model Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#model-configuration">Model Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#performance-settings">Performance Settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#model-configuration">Model Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#yolo-settings">YOLO Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#osnet-settings">OSNet Settings</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#deployment-configuration">Deployment Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#development-environment">Development Environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#production-environment">Production Environment</a></li>
@@ -132,8 +129,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#logging-configuration">Logging Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#advanced-configuration">Advanced Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#custom-model-paths">Custom Model Paths</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#database-integration">Database Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#api-integration">API Integration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#troubleshooting-configuration">Troubleshooting Configuration</a><ul>
@@ -158,13 +153,6 @@
 <li class="toctree-l2"><a class="reference internal" href="training.html#osnet-training">OSNet Training</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="training.html#id1">Dataset Preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="training.html#id2">Training Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="training.html#transfer-learning">Transfer Learning</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="training.html#monitoring-training-progress">Monitoring Training Progress</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="training.html#tensorboard-integration">TensorBoard Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="training.html#weights-biases-integration">Weights &amp; Biases Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="training.html#custom-logging">Custom Logging</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="training.html#model-evaluation">Model Evaluation</a><ul>
@@ -183,16 +171,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Inference Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#yolo-inference">YOLO Inference</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#single-image-detection">Single Image Detection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#batch-image-processing">Batch Image Processing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#video-processing">Video Processing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#real-time-webcam-detection">Real-time Webcam Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bounding-box-detection">Bounding Box Detection</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#osnet-inference">OSNet Inference</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#single-image-embedding">Single Image Embedding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#batch-embedding-generation">Batch Embedding Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#person-gallery-creation">Person Gallery Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-model">Load Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#person-embedding">Person Embedding</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#combined-pipeline">Combined Pipeline</a><ul>
@@ -327,338 +311,167 @@
 </section>
 <section id="yolo-inference">
 <h2>YOLO Inference<a class="headerlink" href="#yolo-inference" title="Link to this heading"></a></h2>
-<section id="single-image-detection">
-<h3>Single Image Detection<a class="headerlink" href="#single-image-detection" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.infrastructure.yolo.core.predict</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLOPredictor</span>
+<section id="bounding-box-detection">
+<h3>Bounding Box Detection<a class="headerlink" href="#bounding-box-detection" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># python -m src.infrastructure.yolo.core;predict.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Runs object detection and returns both bounding boxes and cropped person images.</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">detect_people_in_image</span><span class="p">():</span>
-    <span class="n">predictor</span> <span class="o">=</span> <span class="n">YOLOPredictor</span><span class="p">()</span>
+<span class="sd">    Args:</span>
+<span class="sd">        images: Single image path/array or list of image paths/arrays to process.</span>
 
-    <span class="c1"># Load image and predict</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="s2">&quot;path/to/image.jpg&quot;</span><span class="p">)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List of dictionaries containing detection results for each image.</span>
+<span class="sd">        Returns empty list if no detections found.</span>
 
-    <span class="c1"># Process results</span>
-    <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-        <span class="n">bbox</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>  <span class="c1"># [x1, y1, x2, y2]</span>
-        <span class="n">confidence</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span>
-        <span class="n">class_name</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">]</span>
-        <span class="n">cropped_image</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;cropped_image&#39;</span><span class="p">]</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If YOLO prediction fails.</span>
+<span class="sd">        ValueError: If input images are invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">YOLOSettings</span><span class="p">()</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">yolo_client</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">YOLO_MODEL_PATH</span><span class="p">)</span> <span class="c1">#Or YOLO(settings.YOLO_MODEL_PATH) to load the model</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">bbox</span><span class="si">}</span><span class="s2"> with confidence </span><span class="si">{</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="p">[</span><span class="n">images</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">results</span>
-</pre></div>
-</div>
-<p><strong>Using the API endpoint:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+            <span class="n">images</span><span class="p">,</span>
+            <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">conf</span><span class="o">=</span><span class="mf">0.28</span><span class="p">,</span>
+            <span class="n">classes</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
 
-<span class="c1"># Encode image to base64</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;person.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">image_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">results_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 
-<span class="c1"># Send to API</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-    <span class="s1">&#39;http://localhost:5000/detect&#39;</span><span class="p">,</span>
-    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">image_data</span><span class="p">}</span>
-<span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">results_list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
 
-<span class="n">detections</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;detections&#39;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span><span class="si">}</span><span class="s2"> people&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="batch-image-processing">
-<h3>Batch Image Processing<a class="headerlink" href="#batch-image-processing" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+        <span class="n">bounding_boxes</span> <span class="o">=</span> <span class="n">get_bounding_boxes</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">results_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">bounding_boxes</span> <span class="k">if</span> <span class="n">bounding_boxes</span> <span class="k">else</span> <span class="p">[]</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">batch_detect_people</span><span class="p">():</span>
-    <span class="n">predictor</span> <span class="o">=</span> <span class="n">YOLOPredictor</span><span class="p">()</span>
-    <span class="n">image_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;images/&quot;</span><span class="p">)</span>
-
-    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">for</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="n">image_folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.jpg&quot;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-
-        <span class="n">detections</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">))</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">image_path</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">detections</span>
-
-        <span class="c1"># Save visualization</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
-            <span class="n">bbox</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>
-            <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
-
-            <span class="c1"># Draw bounding box</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-            <span class="c1"># Add confidence text</span>
-            <span class="n">conf_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">detection</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conf_text</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span>
-                       <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># Save result</span>
-        <span class="n">output_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;results/</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">results</span>
-</pre></div>
-</div>
-</section>
-<section id="video-processing">
-<h3>Video Processing<a class="headerlink" href="#video-processing" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">process_video</span><span class="p">():</span>
-    <span class="n">predictor</span> <span class="o">=</span> <span class="n">YOLOPredictor</span><span class="p">()</span>
-
-    <span class="c1"># Open video</span>
-    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s2">&quot;input_video.mp4&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Setup video writer</span>
-    <span class="n">fourcc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="s1">&#39;mp4v&#39;</span><span class="p">)</span>
-    <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FPS</span><span class="p">))</span>
-    <span class="n">width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_WIDTH</span><span class="p">))</span>
-    <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_FRAME_HEIGHT</span><span class="p">))</span>
-
-    <span class="n">out</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">(</span><span class="s1">&#39;output_video.mp4&#39;</span><span class="p">,</span> <span class="n">fourcc</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
-
-    <span class="n">frame_number</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">total_detections</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="n">frame_number</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># Process every 5th frame for performance</span>
-        <span class="k">if</span> <span class="n">frame_number</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">detections</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-            <span class="n">total_detections</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">detections</span><span class="p">)</span>
-
-            <span class="c1"># Draw detections</span>
-            <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
-                <span class="n">bbox</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>
-                <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
-
-                <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-                <span class="n">conf_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Person </span><span class="si">{</span><span class="n">detection</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">conf_text</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span>
-                           <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># Write frame</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-
-        <span class="c1"># Progress update</span>
-        <span class="k">if</span> <span class="n">frame_number</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processed </span><span class="si">{</span><span class="n">frame_number</span><span class="si">}</span><span class="s2"> frames, found </span><span class="si">{</span><span class="n">total_detections</span><span class="si">}</span><span class="s2"> people&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Cleanup</span>
-    <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-    <span class="n">out</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Video processing complete. Total detections: </span><span class="si">{</span><span class="n">total_detections</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="real-time-webcam-detection">
-<h3>Real-time Webcam Detection<a class="headerlink" href="#real-time-webcam-detection" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">real_time_detection</span><span class="p">():</span>
-    <span class="n">predictor</span> <span class="o">=</span> <span class="n">YOLOPredictor</span><span class="p">()</span>
-
-    <span class="c1"># Open webcam</span>
-    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">cap</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: Cannot open webcam&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Press &#39;q&#39; to quit&quot;</span><span class="p">)</span>
-
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="c1"># Detect people</span>
-        <span class="n">detections</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
-
-        <span class="c1"># Draw results</span>
-        <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">detections</span><span class="p">:</span>
-            <span class="n">bbox</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">]</span>
-            <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">bbox</span><span class="p">)</span>
-            <span class="n">confidence</span> <span class="o">=</span> <span class="n">detection</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span>
-
-            <span class="c1"># Draw bounding box</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">confidence</span> <span class="o">&gt;</span> <span class="mf">0.7</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">color</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-            <span class="c1"># Draw confidence</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Person </span><span class="si">{</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">cv2</span><span class="o">.</span><span class="n">putText</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span>
-                       <span class="n">cv2</span><span class="o">.</span><span class="n">FONT_HERSHEY_SIMPLEX</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-        <span class="c1"># Show frame</span>
-        <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;Real-time Person Detection&#39;</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-
-        <span class="c1"># Exit on &#39;q&#39;</span>
-        <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">):</span>
-            <span class="k">break</span>
-
-    <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
-    <span class="n">cv2</span><span class="o">.</span><span class="n">destroyAllWindows</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;YOLO prediction failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="osnet-inference">
 <h2>OSNet Inference<a class="headerlink" href="#osnet-inference" title="Link to this heading"></a></h2>
-<section id="single-image-embedding">
-<h3>Single Image Embedding<a class="headerlink" href="#single-image-embedding" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.infrastructure.osnet.core.encode</span><span class="w"> </span><span class="kn">import</span> <span class="n">OSNetEncoder</span>
+<section id="load-model">
+<h3>Load Model<a class="headerlink" href="#load-model" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># python -m src.infrastructure.osnet.script.load_checkpoint</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_person_embedding</span><span class="p">():</span>
-    <span class="n">encoder</span> <span class="o">=</span> <span class="n">OSNetEncoder</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_checkpoint</span><span class="p">(</span><span class="n">weights_path</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a pre-trained model checkpoint and prepare it for inference.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        weights_path (str): Path to the checkpoint file containing the model weights.</span>
+<span class="sd">        device (torch.device): Device to load the model onto (e.g., &#39;cpu&#39; or &#39;cuda&#39;).</span>
+<span class="sd">        model (torch.nn.Module): The model instance to load the weights into.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.nn.Module: The model with loaded weights, moved to the specified device</span>
+<span class="sd">                        and set to evaluation mode.</span>
+<span class="sd">    Note:</span>
+<span class="sd">        This function assumes the checkpoint is in Torchreid format with weights</span>
+<span class="sd">        stored under the &#39;state_dict&#39; key. Modify accordingly for other formats.</span>
+<span class="sd">        Uses strict=False when loading state dict to allow partial loading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">weights_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;state_dict&#39;</span><span class="p">]</span>
 
-    <span class="c1"># Load and encode image</span>
-    <span class="n">embedding</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode_single_image</span><span class="p">(</span><span class="s2">&quot;person.jpg&quot;</span><span class="p">)</span>
+    <span class="n">state_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                  <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;classifier&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                     <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;running_mean&#39;</span><span class="p">)</span> <span class="ow">and</span>
+                     <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;running_var&#39;</span><span class="p">)}</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated embedding shape: </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding type: </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">embedding</span>
-</pre></div>
-</div>
-<p><strong>Using the API endpoint:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
-
-<span class="c1"># Upload image and get embedding</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;person.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">image_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-    <span class="s1">&#39;http://localhost:5000/upload-embedding&#39;</span><span class="p">,</span>
-    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">image_data</span><span class="p">}</span>
-<span class="p">)</span>
-
-<span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="n">embedding</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;embedding&#39;</span><span class="p">]</span>  <span class="c1"># Base64 encoded</span>
-    <span class="n">shape</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding created with shape: </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;detail&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">model</span>
 </pre></div>
 </div>
 </section>
-<section id="batch-embedding-generation">
-<h3>Batch Embedding Generation<a class="headerlink" href="#batch-embedding-generation" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<section id="person-embedding">
+<h3>Person Embedding<a class="headerlink" href="#person-embedding" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># python -m src.infrastructure.osnet.core.encode</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OSNetEncoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle OSNet encoding operations for person re-identification.&quot;&quot;&quot;</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">batch_generate_embeddings</span><span class="p">():</span>
-    <span class="n">encoder</span> <span class="o">=</span> <span class="n">OSNetEncoder</span><span class="p">()</span>
-    <span class="n">image_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;person_images/&quot;</span><span class="p">)</span>
-
-    <span class="n">embeddings</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="k">for</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="n">image_folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.jpg&quot;</span><span class="p">):</span>
-        <span class="n">person_id</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">stem</span>  <span class="c1"># Use filename as ID</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">person_id</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">embedding</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode_single_image</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">))</span>
-            <span class="n">embeddings</span><span class="p">[</span><span class="n">person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">embedding</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Generated embedding for </span><span class="si">{</span><span class="n">person_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Failed to process </span><span class="si">{</span><span class="n">person_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Save embeddings</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="s2">&quot;person_embeddings.npz&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">embeddings</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span><span class="si">}</span><span class="s2"> embeddings&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">embeddings</span>
-</pre></div>
-</div>
-</section>
-<section id="person-gallery-creation">
-<h3>Person Gallery Creation<a class="headerlink" href="#person-gallery-creation" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src._lib.encrypt</span><span class="w"> </span><span class="kn">import</span> <span class="n">encrypt_embedding</span><span class="p">,</span> <span class="n">decrypt_embedding</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PersonGallery</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">OSNetEncoder</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gallery</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">osnet_client</span> <span class="o">=</span> <span class="n">OSNetModel</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">OSNetSettings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">osnet_client</span><span class="o">.</span><span class="n">create_osnet_model</span><span class="p">(</span>
+            <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">OSNET_NUM_CLASSES</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">OSNET_SAVE_DIR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">OSNET_MODEL_NAME</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">create_transforms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">OSNET_IMG_HEIGHT</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">OSNET_IMG_WIDTH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_model</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_person</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">person_id</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a person to the gallery&quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Generate embedding</span>
-            <span class="n">embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encode_single_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the OSNet model with pre-trained weights.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">load_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OSNet model loaded successfully&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Encrypt embedding</span>
-            <span class="n">encrypted_embedding</span> <span class="o">=</span> <span class="n">encrypt_embedding</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_single_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encode a single image to feature vector.</span>
 
-            <span class="c1"># Store in gallery</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gallery</span><span class="p">[</span><span class="n">person_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;embedding&#39;</span><span class="p">:</span> <span class="n">encrypted_embedding</span><span class="p">,</span>
-                <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">image_path</span><span class="p">,</span>
-                <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="p">{},</span>
-                <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-            <span class="p">}</span>
+<span class="sd">        Args:</span>
+<span class="sd">            image: Input image (PIL Image, numpy array, or tensor)</span>
 
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Added </span><span class="si">{</span><span class="n">person_id</span><span class="si">}</span><span class="s2"> to gallery&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Feature vector (1D array)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Failed to add </span><span class="si">{</span><span class="n">person_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">preprocess_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
+        <span class="n">image_tensor</span> <span class="o">=</span> <span class="n">image_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_gallery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save gallery to file&quot;&quot;&quot;</span>
-        <span class="n">gallery_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">image_tensor</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">person_id</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gallery</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">gallery_data</span><span class="p">[</span><span class="n">person_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;embedding&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;embedding&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
-                <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;image_path&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">]</span>
-            <span class="p">}</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">gallery_data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gallery saved to </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">features</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_gallery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load gallery from file&quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">gallery_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encode a batch of images to feature vectors.</span>
 
-        <span class="k">for</span> <span class="n">person_id</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">gallery_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gallery</span><span class="p">[</span><span class="n">person_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s1">&#39;embedding&#39;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;embedding&#39;</span><span class="p">]),</span>
-                <span class="s1">&#39;image_path&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;image_path&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">],</span>
-                <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">]</span>
-            <span class="p">}</span>
+<span class="sd">        Args:</span>
+<span class="sd">            images: List of images (PIL Images, numpy arrays, or tensors)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gallery</span><span class="p">)</span><span class="si">}</span><span class="s2"> people from gallery&quot;</span><span class="p">)</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Feature matrix (num_images x feature_dim)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">images</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
 
-<span class="c1"># Usage</span>
-<span class="n">gallery</span> <span class="o">=</span> <span class="n">PersonGallery</span><span class="p">()</span>
-<span class="n">gallery</span><span class="o">.</span><span class="n">add_person</span><span class="p">(</span><span class="s2">&quot;john_doe&quot;</span><span class="p">,</span> <span class="s2">&quot;images/john.jpg&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">})</span>
-<span class="n">gallery</span><span class="o">.</span><span class="n">add_person</span><span class="p">(</span><span class="s2">&quot;jane_smith&quot;</span><span class="p">,</span> <span class="s2">&quot;images/jane.jpg&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Jane Smith&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">})</span>
-<span class="n">gallery</span><span class="o">.</span><span class="n">save_gallery</span><span class="p">(</span><span class="s2">&quot;person_gallery.json&quot;</span><span class="p">)</span>
+        <span class="n">image_tensors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">images</span><span class="p">:</span>
+            <span class="n">tensor</span> <span class="o">=</span> <span class="n">preprocess_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
+            <span class="n">image_tensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">batch_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">image_tensors</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">batch_tensor</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">features</span>
 </pre></div>
 </div>
 </section>
@@ -667,30 +480,43 @@
 <h2>Combined Pipeline<a class="headerlink" href="#combined-pipeline" title="Link to this heading"></a></h2>
 <section id="complete-person-search">
 <h3>Complete Person Search<a class="headerlink" href="#complete-person-search" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.application.use_cases.predict_person</span><span class="w"> </span><span class="kn">import</span> <span class="n">predict_person_on_stream</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src._lib.encrypt</span><span class="w"> </span><span class="kn">import</span> <span class="n">decrypt_embedding</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">encoder</span> <span class="o">=</span> <span class="n">OSNetEncoder</span><span class="p">()</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">search_person_in_video</span><span class="p">():</span>
-    <span class="c1"># Step 1: Create reference embedding</span>
-    <span class="n">encoder</span> <span class="o">=</span> <span class="n">OSNetEncoder</span><span class="p">()</span>
-    <span class="n">reference_embedding</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode_single_image</span><span class="p">(</span><span class="s2">&quot;reference_person.jpg&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_person_on_stream</span><span class="p">(</span><span class="n">chosen_person</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare the chosen person&#39;s embedding to all detected people in the video stream.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        chosen_person: Encrypted embedding of the target person.</span>
+<span class="sd">        stream: Video frame(s) or stream to process.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        List of matching bounding boxes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">people_results</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+    <span class="n">all_cropped_images</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_bboxes</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># Step 2: Search in video</span>
-    <span class="n">predictor</span> <span class="o">=</span> <span class="n">YOLOPredictor</span><span class="p">()</span>
-    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="s2">&quot;search_video.mp4&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">frame_result</span> <span class="ow">in</span> <span class="n">people_results</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">detection</span> <span class="ow">in</span> <span class="n">frame_result</span><span class="p">[</span><span class="s1">&#39;detections&#39;</span><span class="p">]:</span>
+            <span class="n">all_cropped_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detection</span><span class="p">[</span><span class="s1">&#39;cropped_image&#39;</span><span class="p">])</span>
+            <span class="n">all_bboxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detection</span><span class="p">[</span><span class="s1">&#39;bbox&#39;</span><span class="p">])</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_cropped_images</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">decrypted_embedding</span> <span class="o">=</span> <span class="n">decrypt_embedding</span><span class="p">(</span><span class="n">chosen_person</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+
+    <span class="n">encoded_batch</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode_batch</span><span class="p">(</span><span class="n">all_cropped_images</span><span class="p">)</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">frame_number</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
-            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">encoded_person</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">encoded_batch</span><span class="p">):</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="n">compute_euclidean_distance</span><span class="p">(</span><span class="n">decrypted_embedding</span><span class="p">,</span> <span class="n">encoded_person</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="n">all_bboxes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="s2">&quot;distance&quot;</span><span class="p">:</span> <span class="n">distance</span>
+            <span class="p">})</span>
 
-        <span class="n">frame_number</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># Detect people in frame</span>
-        <span class="n">detections</span> <span class="o">=</span> <span class="n">predictor</span><span class="o">.</span><span class="n">predict_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matches</span>
 </pre></div>
 </div>
 </section>

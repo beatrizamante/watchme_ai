@@ -6,12 +6,16 @@ This guide covers the configuration options for the WatchMe AI Backend, includin
 Environment Variables
 ---------------------
 
-The WatchMe AI Backend uses environment variables for configuration management. Create a ``.env`` file in your project root with the following settings:
+The WatchMe AI Backend uses environment variables for configuration management.
+
+Create a ``.env`` file in your project root with the following settings:
 
 Core Configuration
 ~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
+
+   cp .env.example .env
 
    # Basic server configuration
    HOST=0.0.0.0
@@ -21,34 +25,50 @@ Core Configuration
    # Security
    ENCRYPTION_KEY=your_base64_encryption_key_here
 
-AI Model Configuration
-~~~~~~~~~~~~~~~~~~~~~~
+Create a ``.env.yolo`` and a ``.env.osnet``  file in your project root with the following settings:
+
+Model Configuration
+-------------------
 
 .. code-block:: bash
 
+   cp .env.yolo.example .env.yolo
+   cp .env.osnet.example .env.osnet
+
    # YOLO Configuration
    YOLO_MODEL_PATH=src/infrastructure/yolo/client/best.pt
-   YOLO_PROJECT_PATH=src/infrastructure/yolo/projects
-   YOLO_DATASET_PATH=src/dataset/yolo
-   YOLO_CONFIDENCE_THRESHOLD=0.5
-   YOLO_IOU_THRESHOLD=0.45
+   YOLO_BATCH_SIZE=16
+   YOLO_LEARNING_RATE=0.001
+   YOLO_LOSS_FUNC=AdamW
+   YOLO_DROPOUT=0.0
+   YOLO_DEVICE=0
+   YOLO_DATASET_PATH=src/dataset/yolo/dataset.yml
+   YOLO_PROJECT_PATH=src/dataset/yolo/runs/detect
+
 
    # OSNet Configuration
-   OSNET_SAVE_DIR=src/infrastructure/osnet/client
-   OSNET_DATASET_PATH=src/dataset/osnet
-   OSNET_NUM_CLASSES=751
-   OSNET_EPOCHS=100
+   OSNET_EPOCHS=250
+   OSNET_LEARNING_RATE=0.0003
+   OSNET_WEIGHT_DECAY=0.0005
    OSNET_BATCH_SIZE=32
-   OSNET_LEARNING_RATE=0.00035
+   OSNET_OPTIMIZER=adam
+   OSNET_NUM_CLASSES=751
+   OSNET_IMG_HEIGHT=256
+   OSNET_IMG_WIDTH=128
+   OSNET_NUM_INSTANCES=4
+   OSNET_MARGIN=0.3
+   OSNET_STEPSIZE=20
+   OSNET_EVAL_FREQ=30
+   OSNET_PRINT_FREQ=10
+   OSNET_DATASET_NAME=dukemtmcvidreid
+   OSNET_ROOT_DIR=src/dataset/osnet
+   OSNET_SAVE_DIR=src/infrastructure/osnet/client
+   OSNET_MODEL_NAME=model.pth.tar
 
 Performance Settings
 ~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
-
-   # GPU Configuration
-   CUDA_VISIBLE_DEVICES=0
-   USE_GPU=true
 
    # Processing Limits
    MAX_VIDEO_SIZE_MB=500
@@ -70,37 +90,6 @@ The encryption key is used to secure person embeddings. Generate a secure key:
    key = secrets.token_bytes(32)
    key_b64 = base64.b64encode(key).decode()
    print(f"ENCRYPTION_KEY={key_b64}")
-
-Model Configuration
--------------------
-
-YOLO Settings
-~~~~~~~~~~~~~
-
-Configure YOLO object detection:
-
-.. code-block:: python
-
-   # In config.py
-   class YOLOSettings(BaseSettings):
-       YOLO_MODEL_PATH: str = "src/infrastructure/yolo/client/best.pt"
-       YOLO_CONFIDENCE_THRESHOLD: float = 0.5
-       YOLO_IOU_THRESHOLD: float = 0.45
-       YOLO_PROJECT_PATH: str = "src/infrastructure/yolo/projects"
-
-OSNet Settings
-~~~~~~~~~~~~~~
-
-Configure OSNet person re-identification:
-
-.. code-block:: python
-
-   # In config.py
-   class OSNetSettings(BaseSettings):
-       OSNET_SAVE_DIR: str = "src/infrastructure/osnet/client"
-       OSNET_NUM_CLASSES: int = 751
-       OSNET_EPOCHS: int = 100
-       OSNET_BATCH_SIZE: int = 32
 
 Deployment Configuration
 -------------------------
@@ -191,29 +180,6 @@ For custom trained models:
 
    # Custom OSNet checkpoint
    OSNET_CHECKPOINT_PATH=/path/to/your/osnet_checkpoint.pth.tar
-
-Database Integration
-~~~~~~~~~~~~~~~~~~~~
-
-If integrating with external databases:
-
-.. code-block:: bash
-
-   # Database configuration
-   DATABASE_URL=postgresql://user:password@localhost:5432/watchme
-   REDIS_URL=redis://localhost:6379/0
-
-API Integration
-~~~~~~~~~~~~~~~
-
-Configuration for external API integration:
-
-.. code-block:: bash
-
-   # External API endpoints
-   WATCHME_API_URL=http://localhost:3000
-   API_KEY=your_api_key_here
-   WEBHOOK_SECRET=your_webhook_secret
 
 Troubleshooting Configuration
 -----------------------------

@@ -113,16 +113,13 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#core-configuration">Core Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ai-model-configuration">AI Model Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#model-configuration">Model Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#performance-settings">Performance Settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-encryption-key">Generating Encryption Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model-configuration">Model Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#yolo-settings">YOLO Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#osnet-settings">OSNet Settings</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#deployment-configuration">Deployment Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#development-environment">Development Environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#production-environment">Production Environment</a></li>
@@ -132,8 +129,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#logging-configuration">Logging Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-configuration">Advanced Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#custom-model-paths">Custom Model Paths</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#database-integration">Database Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api-integration">API Integration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting-configuration">Troubleshooting Configuration</a><ul>
@@ -158,13 +153,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../guide/training.html#osnet-training">OSNet Training</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../guide/training.html#id1">Dataset Preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/training.html#id2">Training Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#transfer-learning">Transfer Learning</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#monitoring-training-progress">Monitoring Training Progress</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#tensorboard-integration">TensorBoard Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#weights-biases-integration">Weights &amp; Biases Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#custom-logging">Custom Logging</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/training.html#model-evaluation">Model Evaluation</a><ul>
@@ -317,10 +305,13 @@
 <p>This guide covers the configuration options for the WatchMe AI Backend, including environment variables, model settings, and deployment configurations.</p>
 <section id="environment-variables">
 <h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h2>
-<p>The WatchMe AI Backend uses environment variables for configuration management. Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in your project root with the following settings:</p>
+<p>The WatchMe AI Backend uses environment variables for configuration management.</p>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in your project root with the following settings:</p>
 <section id="core-configuration">
 <h3>Core Configuration<a class="headerlink" href="#core-configuration" title="Link to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic server configuration</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+
+<span class="c1"># Basic server configuration</span>
 <span class="nv">HOST</span><span class="o">=</span><span class="m">0</span>.0.0.0
 <span class="nv">PORT</span><span class="o">=</span><span class="m">5000</span>
 <span class="nv">DEBUG</span><span class="o">=</span><span class="nb">false</span>
@@ -329,33 +320,48 @@
 <span class="nv">ENCRYPTION_KEY</span><span class="o">=</span>your_base64_encryption_key_here
 </pre></div>
 </div>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">.env.yolo</span></code> and a <code class="docutils literal notranslate"><span class="pre">.env.osnet</span></code>  file in your project root with the following settings:</p>
 </section>
-<section id="ai-model-configuration">
-<h3>AI Model Configuration<a class="headerlink" href="#ai-model-configuration" title="Link to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOLO Configuration</span>
+</section>
+<section id="model-configuration">
+<h2>Model Configuration<a class="headerlink" href="#model-configuration" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.yolo.example<span class="w"> </span>.env.yolo
+cp<span class="w"> </span>.env.osnet.example<span class="w"> </span>.env.osnet
+
+<span class="c1"># YOLO Configuration</span>
 <span class="nv">YOLO_MODEL_PATH</span><span class="o">=</span>src/infrastructure/yolo/client/best.pt
-<span class="nv">YOLO_PROJECT_PATH</span><span class="o">=</span>src/infrastructure/yolo/projects
-<span class="nv">YOLO_DATASET_PATH</span><span class="o">=</span>src/dataset/yolo
-<span class="nv">YOLO_CONFIDENCE_THRESHOLD</span><span class="o">=</span><span class="m">0</span>.5
-<span class="nv">YOLO_IOU_THRESHOLD</span><span class="o">=</span><span class="m">0</span>.45
+<span class="nv">YOLO_BATCH_SIZE</span><span class="o">=</span><span class="m">16</span>
+<span class="nv">YOLO_LEARNING_RATE</span><span class="o">=</span><span class="m">0</span>.001
+<span class="nv">YOLO_LOSS_FUNC</span><span class="o">=</span>AdamW
+<span class="nv">YOLO_DROPOUT</span><span class="o">=</span><span class="m">0</span>.0
+<span class="nv">YOLO_DEVICE</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">YOLO_DATASET_PATH</span><span class="o">=</span>src/dataset/yolo/dataset.yml
+<span class="nv">YOLO_PROJECT_PATH</span><span class="o">=</span>src/dataset/yolo/runs/detect
+
 
 <span class="c1"># OSNet Configuration</span>
-<span class="nv">OSNET_SAVE_DIR</span><span class="o">=</span>src/infrastructure/osnet/client
-<span class="nv">OSNET_DATASET_PATH</span><span class="o">=</span>src/dataset/osnet
-<span class="nv">OSNET_NUM_CLASSES</span><span class="o">=</span><span class="m">751</span>
-<span class="nv">OSNET_EPOCHS</span><span class="o">=</span><span class="m">100</span>
+<span class="nv">OSNET_EPOCHS</span><span class="o">=</span><span class="m">250</span>
+<span class="nv">OSNET_LEARNING_RATE</span><span class="o">=</span><span class="m">0</span>.0003
+<span class="nv">OSNET_WEIGHT_DECAY</span><span class="o">=</span><span class="m">0</span>.0005
 <span class="nv">OSNET_BATCH_SIZE</span><span class="o">=</span><span class="m">32</span>
-<span class="nv">OSNET_LEARNING_RATE</span><span class="o">=</span><span class="m">0</span>.00035
+<span class="nv">OSNET_OPTIMIZER</span><span class="o">=</span>adam
+<span class="nv">OSNET_NUM_CLASSES</span><span class="o">=</span><span class="m">751</span>
+<span class="nv">OSNET_IMG_HEIGHT</span><span class="o">=</span><span class="m">256</span>
+<span class="nv">OSNET_IMG_WIDTH</span><span class="o">=</span><span class="m">128</span>
+<span class="nv">OSNET_NUM_INSTANCES</span><span class="o">=</span><span class="m">4</span>
+<span class="nv">OSNET_MARGIN</span><span class="o">=</span><span class="m">0</span>.3
+<span class="nv">OSNET_STEPSIZE</span><span class="o">=</span><span class="m">20</span>
+<span class="nv">OSNET_EVAL_FREQ</span><span class="o">=</span><span class="m">30</span>
+<span class="nv">OSNET_PRINT_FREQ</span><span class="o">=</span><span class="m">10</span>
+<span class="nv">OSNET_DATASET_NAME</span><span class="o">=</span>dukemtmcvidreid
+<span class="nv">OSNET_ROOT_DIR</span><span class="o">=</span>src/dataset/osnet
+<span class="nv">OSNET_SAVE_DIR</span><span class="o">=</span>src/infrastructure/osnet/client
+<span class="nv">OSNET_MODEL_NAME</span><span class="o">=</span>model.pth.tar
 </pre></div>
 </div>
-</section>
 <section id="performance-settings">
 <h3>Performance Settings<a class="headerlink" href="#performance-settings" title="Link to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GPU Configuration</span>
-<span class="nv">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="m">0</span>
-<span class="nv">USE_GPU</span><span class="o">=</span><span class="nb">true</span>
-
-<span class="c1"># Processing Limits</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Processing Limits</span>
 <span class="nv">MAX_VIDEO_SIZE_MB</span><span class="o">=</span><span class="m">500</span>
 <span class="nv">MAX_IMAGE_SIZE_MB</span><span class="o">=</span><span class="m">50</span>
 <span class="nv">FRAME_PROCESSING_LIMIT</span><span class="o">=</span><span class="m">10</span>
@@ -376,33 +382,6 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ENCRYPTION_KEY=</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="model-configuration">
-<h2>Model Configuration<a class="headerlink" href="#model-configuration" title="Link to this heading"></a></h2>
-<section id="yolo-settings">
-<h3>YOLO Settings<a class="headerlink" href="#yolo-settings" title="Link to this heading"></a></h3>
-<p>Configure YOLO object detection:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In config.py</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">YOLOSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
-    <span class="n">YOLO_MODEL_PATH</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src/infrastructure/yolo/client/best.pt&quot;</span>
-    <span class="n">YOLO_CONFIDENCE_THRESHOLD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
-    <span class="n">YOLO_IOU_THRESHOLD</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.45</span>
-    <span class="n">YOLO_PROJECT_PATH</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src/infrastructure/yolo/projects&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="osnet-settings">
-<h3>OSNet Settings<a class="headerlink" href="#osnet-settings" title="Link to this heading"></a></h3>
-<p>Configure OSNet person re-identification:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In config.py</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OSNetSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
-    <span class="n">OSNET_SAVE_DIR</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src/infrastructure/osnet/client&quot;</span>
-    <span class="n">OSNET_NUM_CLASSES</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">751</span>
-    <span class="n">OSNET_EPOCHS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">OSNET_BATCH_SIZE</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span>
-</pre></div>
-</div>
-</section>
 </section>
 <section id="deployment-configuration">
 <h2>Deployment Configuration<a class="headerlink" href="#deployment-configuration" title="Link to this heading"></a></h2>
@@ -482,25 +461,6 @@
 
 <span class="c1"># Custom OSNet checkpoint</span>
 <span class="nv">OSNET_CHECKPOINT_PATH</span><span class="o">=</span>/path/to/your/osnet_checkpoint.pth.tar
-</pre></div>
-</div>
-</section>
-<section id="database-integration">
-<h3>Database Integration<a class="headerlink" href="#database-integration" title="Link to this heading"></a></h3>
-<p>If integrating with external databases:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Database configuration</span>
-<span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:password@localhost:5432/watchme
-<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379/0
-</pre></div>
-</div>
-</section>
-<section id="api-integration">
-<h3>API Integration<a class="headerlink" href="#api-integration" title="Link to this heading"></a></h3>
-<p>Configuration for external API integration:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># External API endpoints</span>
-<span class="nv">WATCHME_API_URL</span><span class="o">=</span>http://localhost:3000
-<span class="nv">API_KEY</span><span class="o">=</span>your_api_key_here
-<span class="nv">WEBHOOK_SECRET</span><span class="o">=</span>your_webhook_secret
 </pre></div>
 </div>
 </section>

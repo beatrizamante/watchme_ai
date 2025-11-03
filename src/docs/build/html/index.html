@@ -112,16 +112,13 @@
 <li class="toctree-l1"><a class="reference internal" href="usage/configuration.html">Configuration Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#environment-variables">Environment Variables</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#core-configuration">Core Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#ai-model-configuration">AI Model Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#model-configuration">Model Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#performance-settings">Performance Settings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#model-configuration">Model Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#yolo-settings">YOLO Settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#osnet-settings">OSNet Settings</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#deployment-configuration">Deployment Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#development-environment">Development Environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#production-environment">Production Environment</a></li>
@@ -131,8 +128,6 @@
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#logging-configuration">Logging Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#advanced-configuration">Advanced Configuration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#custom-model-paths">Custom Model Paths</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#database-integration">Database Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="usage/configuration.html#api-integration">API Integration</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#troubleshooting-configuration">Troubleshooting Configuration</a><ul>
@@ -157,13 +152,6 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#osnet-training">OSNet Training</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/training.html#id1">Dataset Preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide/training.html#id2">Training Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/training.html#transfer-learning">Transfer Learning</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="guide/training.html#monitoring-training-progress">Monitoring Training Progress</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/training.html#tensorboard-integration">TensorBoard Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/training.html#weights-biases-integration">Weights &amp; Biases Integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/training.html#custom-logging">Custom Logging</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#model-evaluation">Model Evaluation</a><ul>
@@ -182,16 +170,12 @@
 <li class="toctree-l1"><a class="reference internal" href="guide/inference.html">Inference Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="guide/inference.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/inference.html#yolo-inference">YOLO Inference</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#single-image-detection">Single Image Detection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#batch-image-processing">Batch Image Processing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#video-processing">Video Processing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#real-time-webcam-detection">Real-time Webcam Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#bounding-box-detection">Bounding Box Detection</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/inference.html#osnet-inference">OSNet Inference</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#single-image-embedding">Single Image Embedding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#batch-embedding-generation">Batch Embedding Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#person-gallery-creation">Person Gallery Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#load-model">Load Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/inference.html#person-embedding">Person Embedding</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/inference.html#combined-pipeline">Combined Pipeline</a><ul>
@@ -227,11 +211,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#integration-examples">Integration Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/api-endpoints.html#python-client">Python Client</a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide/api-endpoints.html#node-js-typescript-client">Node.js/TypeScript Client</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#testing">Testing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/api-endpoints.html#health-check">Health Check</a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide/api-endpoints.html#api-documentation">API Documentation</a></li>
 </ul>
 </li>
@@ -351,8 +330,8 @@ YOLO object detection with OSNet person re-identification for real-time video an
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage/configuration.html">Configuration Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#environment-variables">Environment Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#model-configuration">Model Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#deployment-configuration">Deployment Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#logging-configuration">Logging Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/configuration.html#advanced-configuration">Advanced Configuration</a></li>
@@ -368,7 +347,6 @@ YOLO object detection with OSNet person re-identification for real-time video an
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#yolo-training">YOLO Training</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#osnet-training">OSNet Training</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide/training.html#monitoring-training-progress">Monitoring Training Progress</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#model-evaluation">Model Evaluation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/training.html#best-practices">Best Practices</a></li>
 </ul>
@@ -389,7 +367,6 @@ YOLO object detection with OSNet person re-identification for real-time video an
 <li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#error-handling">Error Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#rate-limiting">Rate Limiting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#integration-examples">Integration Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/api-endpoints.html#performance-considerations">Performance Considerations</a></li>
 </ul>
 </li>
@@ -414,14 +391,6 @@ YOLO object detection with OSNet person re-identification for real-time video an
 </li>
 </ul>
 </div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 
 

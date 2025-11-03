@@ -35,10 +35,3 @@ YOLO object detection with OSNet person re-identification for real-time video an
 
    examples/video-search
    examples/websocket
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
