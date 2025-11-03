@@ -1,5 +1,42 @@
 pydantic_settings
+torchreid
 pydantic
 ultralytics
+ray[tune]
+wandb
+pycryptodome
 ray
 tqdm
+fastapi
+sphinx
+uvicorn
+torch
+torchvision
+torchaudio
+python-multipart
+seaborn
+numpy
+Cython
+h5py
+Pillow
+six
+scipy
+opencv-python
+matplotlib
+tb-nightly
+future
+yacs
+gdown
+flake8
+yapf
+isort==4.3.21
+imageio
+chardet
+
+# Export --------------------------------------
+# onnx
+# onnx-simplified
+# openvino-dev
+# openvino2tensorflow
+# tensorflow
+# tensorflow_datasets

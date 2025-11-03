@@ -1,5 +1,8 @@
-venv
+.venv*
+venv*
 .env
+.env.osnet
+.env.yolo
 __pycache__/
 *.py[cod]
 

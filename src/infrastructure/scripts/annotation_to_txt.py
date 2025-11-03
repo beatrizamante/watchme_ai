@@ -1,10 +1,11 @@
-import os
 import json
+import os
+
 from tqdm import tqdm
 
-coco_json = "src/dataset/yolo/images/annotations/instances_val2017.json"
+coco_json = "src/dataset/yolo/labels/instances_val2017.json"
 images_dir = "src/dataset/yolo/images/val"
-labels_dir = "src/dataset/yolo/images/labels/val"
+labels_dir = "src/dataset/yolo/labels/val"
 os.makedirs(labels_dir, exist_ok=True)
 
 with open(coco_json, "r", encoding="utf-8") as f:
@@ -16,7 +17,7 @@ PERSON_CLASS_ID = 1
 
 for ann in tqdm(coco["annotations"], desc="Converting"):
     if ann["category_id"] != PERSON_CLASS_ID:
-        continue 
+        continue
 
     img_info = images[ann["image_id"]]
     img_w, img_h = img_info["width"], img_info["height"]

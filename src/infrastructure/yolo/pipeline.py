@@ -1,51 +1,78 @@
-import torch
-from .core.train import train
-from .core.tune import model_tune
-import os
-import json
+from pathlib import Path
 
-print(f"CUDA available: {torch.cuda.is_available()}")
-print(f"Device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}")
+from config import YOLOSettings
+from src.infrastructure.yolo.core.train import YOLOTrainer
+from src.infrastructure.yolo.core.tune import HyperparameterTuner
 
-if __name__ == "__main__":
-    print("="*60)
-    print("YOLO Training & Hyperparameter Tuning Pipeline")
-    print("="*60)
+class YOLOPipeline:
+    """Complete YOLO training pipeline with resume support"""
 
-    print("\n[1/3] Training baseline model...")
-    print("-" * 60)
-    base_results = train()
-    best_weights = os.path.join(str(base_results.save_dir), "weights", "best.pt")
-    print("✓ Baseline training complete!")
-    print(f"  Best weights: {best_weights}")
+    def __init__(self):
+        self.settings = YOLOSettings()
+        self.trainer = YOLOTrainer()
+        self.tuner = HyperparameterTuner()
+        self.baseline_weights = None
+        self.best_hyperparams = None
+        self.final_results = None
 
-    print("\n[2/3] Running hyperparameter tuning with Ray Tune...")
-    print("-" * 60)
-    print("This may take a while...")
-    
-    best_hp = model_tune(best_weights)
-    
-    print("✓ Hyperparameter tuning complete!")
-    print("  Best hyperparameters:")
-    if best_hp is not None:
-        for key, value in best_hp.items():
-            print(f"    - {key}: {value}")
-    else:
-        print("    No hyperparameters found (best_hp is None).")
+    def _check_for_baseline_weights(self):
+        """Check if there's an existing baseline weights to resume from"""
+        baseline_dir = Path(self.settings.YOLO_PROJECT_PATH) / "baseline_train"
+        best_weights_path = baseline_dir / "weights" / "best.pt"
 
-    print("\n[3/3] Retraining with optimized hyperparameters...")
-    print("-" * 60)
-    
-    final_results = train(weights=best_weights, hp=best_hp)
-    
-    print("✓ Final training complete!")
-    print(f"  Model saved to: {final_results.save_dir}")
-    
-    print("\n" + "="*60)
-    print("Pipeline completed successfully!")
-    print("="*60)
-    
-    config_path = os.path.join(str(final_results.save_dir), "best_hyperparameters.json")
-    with open(config_path, 'w', encoding='utf-8') as f:
-        json.dump(best_hp, f, indent=2)
-    print(f"\nBest hyperparameters saved to: {config_path}")
+        model_path = Path(self.settings.YOLO_MODEL_PATH)
+
+        if best_weights_path.exists():
+            return True, str(best_weights_path)
+        elif model_path.exists():
+            return True, str(model_path)
+        return False, None
+
+    def run(self):
+        """
+        Run complete pipeline: baseline training -> tuning -> final training
+        """
+        print("="*60)
+        print("YOLO Training & Hyperparameter Tuning Pipeline")
+        print("="*60)
+
+        has_baseline, baseline_path = self._check_for_baseline_weights()
+
+        if not has_baseline:
+            print("\n[1/3] Training baseline model...")
+            print("-" * 60)
+
+            baseline_results = self.trainer.train()
+
+            if baseline_results and hasattr(baseline_results, 'save_dir'):
+                self.baseline_weights = self.trainer.get_best_weights_path()
+                print(f"✓ Baseline training completed: {self.baseline_weights}")
+            else:
+                raise RuntimeError("Training failed or returned invalid results")
+        else:
+            print(f"\n[1/3] Found existing baseline weights: {baseline_path}")
+            self.baseline_weights = baseline_path
+
+        print("\n[2/3] Running hyperparameter tuning...")
+        print("-" * 60)
+        tune_results = self.tuner.tune(
+            baseline_weights=self.baseline_weights,
+        )
+
+        self.best_hyperparams = tune_results.get_best_result().config # type: ignore
+        print(f"✓ Best hyperparameters found: {self.best_hyperparams}")
+
+        print("\n[3/3] Final training with optimized hyperparameters...")
+        print("-" * 60)
+        self.final_results = self.trainer.train(
+            weights=self.baseline_weights,
+            hyperparams=self.best_hyperparams
+        )
+
+        print("\n" + "="*60)
+        print("Pipeline completed successfully!")
+        print(f"Baseline weights: {self.baseline_weights}")
+        print(f"Final model: {self.final_results.save_dir}") # type: ignore
+        print("="*60)
+
+        return self.final_results
