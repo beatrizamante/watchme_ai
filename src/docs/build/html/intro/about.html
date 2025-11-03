@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About WatchMe &mdash; watchme 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Requirements" href="requeriments.html" />
+    <link rel="prev" title="WatchMe AI Backend Documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            watchme
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About WatchMe</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-components">System Components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#watchme-ai-backend-features">WatchMe AI Backend Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#person-re-identification">Person Re-identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-detection">Object Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-performance">Security &amp; Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#watchme-api-features">WatchMe API Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authentication-security">Authentication &amp; Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-management">User Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#person-video-management">Person &amp; Video Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-persistence">Data Persistence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#watchme-ui-features">WatchMe UI Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#user-interface">User Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-management">File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#user-experience">User Experience</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#system-architecture">System Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-flow">Data Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integration-points">Integration Points</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="requeriments.html">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#system-overview">System Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#watchme-ai-backend-requirements">WatchMe AI Backend Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requeriments.html#core-dependencies">Core Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requeriments.html#system-dependencies">System Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requeriments.html#optional-gpu-support">Optional GPU Support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#related-components-optional">Related Components (Optional)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="requeriments.html#watchme-node-js-api">WatchMe Node.js API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="requeriments.html#watchme-frontend">WatchMe Frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="requeriments.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/quickstart.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/quickstart.html#step-1-start-the-server">Step 1: Start the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/quickstart.html#step-2-test-the-api">Step 2: Test the API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/quickstart.html#upload-a-reference-image">Upload a Reference Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/quickstart.html#search-in-a-video">Search in a Video</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/quickstart.html#step-3-websocket-connection">Step 3: WebSocket Connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/quickstart.html#what-s-next">What’s Next?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/configuration.html">Configuration Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#core-configuration">Core Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#ai-model-configuration">AI Model Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#performance-settings">Performance Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#generating-encryption-key">Generating Encryption Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#model-configuration">Model Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#yolo-settings">YOLO Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#osnet-settings">OSNet Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#deployment-configuration">Deployment Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#development-environment">Development Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#production-environment">Production Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#docker-configuration">Docker Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#logging-configuration">Logging Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#advanced-configuration">Advanced Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#custom-model-paths">Custom Model Paths</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#database-integration">Database Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#api-integration">API Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../usage/configuration.html#troubleshooting-configuration">Troubleshooting Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usage/configuration.html#validation">Validation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/training.html">Training Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#yolo-training">YOLO Training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#dataset-preparation">Dataset Preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#training-configuration">Training Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#resume-training">Resume Training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#hyperparameter-tuning">Hyperparameter Tuning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#osnet-training">OSNet Training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#id1">Dataset Preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#id2">Training Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#transfer-learning">Transfer Learning</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#monitoring-training-progress">Monitoring Training Progress</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#tensorboard-integration">TensorBoard Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#weights-biases-integration">Weights &amp; Biases Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#custom-logging">Custom Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#model-evaluation">Model Evaluation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#yolo-evaluation">YOLO Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#osnet-evaluation">OSNet Evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/training.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#data-quality">Data Quality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#training-tips">Training Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/training.html#hardware-optimization">Hardware Optimization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/inference.html">Inference Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/inference.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/inference.html#yolo-inference">YOLO Inference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#single-image-detection">Single Image Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#batch-image-processing">Batch Image Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#video-processing">Video Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#real-time-webcam-detection">Real-time Webcam Detection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/inference.html#osnet-inference">OSNet Inference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#single-image-embedding">Single Image Embedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#batch-embedding-generation">Batch Embedding Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#person-gallery-creation">Person Gallery Creation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/inference.html#combined-pipeline">Combined Pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/inference.html#complete-person-search">Complete Person Search</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/api-endpoints.html">API Endpoints Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#content-types">Content Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#core-endpoints">Core Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#upload-person-embedding">Upload Person Embedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#find-person-in-video">Find Person in Video</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#websocket-endpoints">WebSocket Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#real-time-video-stream-processing">Real-time Video Stream Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#http-status-codes">HTTP Status Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#error-response-format">Error Response Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#common-errors">Common Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#rate-limiting">Rate Limiting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#websocket-connections">WebSocket Connections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#http-endpoints">HTTP Endpoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#request-limits">Request Limits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#integration-examples">Integration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#python-client">Python Client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#node-js-typescript-client">Node.js/TypeScript Client</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#health-check">Health Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#api-documentation">API Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/api-endpoints.html#performance-considerations">Performance Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#optimization-tips">Optimization Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/api-endpoints.html#monitoring">Monitoring</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/video-search.html">Video Search Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/video-search.html#basic-video-search">Basic Video Search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/video-search.html#upload-reference-image-and-search-video">Upload Reference Image and Search Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/video-search.html#complete-python-example">Complete Python Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/websocket.html">WebSocket Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#connection-setup">Connection Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#basic-websocket-connection">Basic WebSocket Connection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#message-types">Message Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#client-to-server-messages">Client to Server Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#server-to-client-messages">Server to Client Messages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#complete-examples">Complete Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#real-time-webcam-tracking">Real-time Webcam Tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#python-async-example">Python Async Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#error-handling-and-reconnection">Error Handling and Reconnection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#robust-websocket-implementation">Robust WebSocket Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#performance-optimization">Performance Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#frame-rate-control">Frame Rate Control</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/websocket.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#security-considerations">Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#resource-management">Resource Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/websocket.html#monitoring-and-debugging">Monitoring and Debugging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">watchme</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">About WatchMe</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/intro/about.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="about-watchme">
+<h1>About WatchMe<a class="headerlink" href="#about-watchme" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>WatchMe is a comprehensive person re-identification and tracking system consisting of three interconnected entities working together to achieve end-to-end person tracking through live feeds and video processing.</p>
+<section id="system-components">
+<h3>System Components<a class="headerlink" href="#system-components" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/beatrizamante/watchme_frontend">WatchMe UI</a> - Frontend application for user interaction</p></li>
+<li><p><a class="reference external" href="https://github.com/beatrizamante/watchme_api">WatchMe API</a> - Backend API for business logic and data management</p></li>
+<li><p><a class="reference external" href="https://github.com/beatrizamante/watchme_ai">WatchMe AI Backend</a> - AI engine for person detection and re-identification</p></li>
+</ul>
+<p>Each component has its own setup, dependencies, and specialized functionality that contributes to the overall system capabilities.</p>
+</section>
+</section>
+<section id="watchme-ai-backend-features">
+<h2>WatchMe AI Backend Features<a class="headerlink" href="#watchme-ai-backend-features" title="Link to this heading"></a></h2>
+<p>The AI Backend serves as the core engine for person re-identification and is designed for:</p>
+<ul class="simple">
+<li><p>Real-time person tracking in video streams</p></li>
+<li><p>Batch video processing for person search</p></li>
+<li><p>Secure embedding storage with AES encryption</p></li>
+<li><p>REST and WebSocket API endpoints for real-time communication</p></li>
+</ul>
+<section id="person-re-identification">
+<h3>Person Re-identification<a class="headerlink" href="#person-re-identification" title="Link to this heading"></a></h3>
+<p>Uses OSNet (Omni-Scale Network) for generating robust person embeddings:</p>
+<ul class="simple">
+<li><p>High accuracy on standard benchmarks (Market1501, DukeMTMC)</p></li>
+<li><p>Real-time inference capability with GPU acceleration</p></li>
+<li><p>Support for various input formats (images, video streams, webcam)</p></li>
+<li><p>Encrypted embedding storage for security</p></li>
+</ul>
+</section>
+<section id="object-detection">
+<h3>Object Detection<a class="headerlink" href="#object-detection" title="Link to this heading"></a></h3>
+<p>YOLO (You Only Look Once) integration for:</p>
+<ul class="simple">
+<li><p>Fast person detection in images and videos</p></li>
+<li><p>Accurate bounding box extraction and cropping</p></li>
+<li><p>Batch processing support for multiple detections</p></li>
+<li><p>Configurable confidence thresholds</p></li>
+</ul>
+</section>
+<section id="security-performance">
+<h3>Security &amp; Performance<a class="headerlink" href="#security-performance" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>AES encryption for person embeddings</p></li>
+<li><p>Environment-based configuration management</p></li>
+<li><p>Optimized for both CPU and GPU inference</p></li>
+</ul>
+</section>
+</section>
+<section id="watchme-api-features">
+<h2>WatchMe API Features<a class="headerlink" href="#watchme-api-features" title="Link to this heading"></a></h2>
+<p>The TypeScript API (<a class="reference external" href="https://github.com/beatrizamante/watchme_api">WatchMe API</a>) provides comprehensive backend services including:</p>
+<section id="authentication-security">
+<h3>Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>JWT cookie-based authentication system</p></li>
+<li><p>Secure HTTP token handling</p></li>
+<li><p>Protected route middleware</p></li>
+<li><p>Session management and logout functionality</p></li>
+<li><p>Websocket proxy for person search</p></li>
+</ul>
+</section>
+<section id="user-management">
+<h3>User Management<a class="headerlink" href="#user-management" title="Link to this heading"></a></h3>
+<p><strong>Administrative Features:</strong></p>
+<ul class="simple">
+<li><p>Create user accounts (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/user</span></code>)</p></li>
+<li><p>Retrieve user information (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/user?id=:userId</span></code>)</p></li>
+<li><p>List all users with filtering (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/users?active=:boolean</span></code>)</p></li>
+<li><p>Delete person embeddings (<code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/person?id=:personId</span></code>)</p></li>
+</ul>
+<p><strong>User Features:</strong></p>
+<ul class="simple">
+<li><p>User registration (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/register</span></code>)</p></li>
+<li><p>User authentication (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/login</span></code>)</p></li>
+<li><p>Profile management (<code class="docutils literal notranslate"><span class="pre">PATCH</span> <span class="pre">/user?id=:userId</span></code>)</p></li>
+<li><p>Profile picture management (<code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/user/picture?id=:userId</span></code>)</p></li>
+<li><p>Secure logout (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/logout</span></code>)</p></li>
+</ul>
+</section>
+<section id="person-video-management">
+<h3>Person &amp; Video Management<a class="headerlink" href="#person-video-management" title="Link to this heading"></a></h3>
+<p><strong>Person Hash Management:</strong></p>
+<ul class="simple">
+<li><p>List all person embeddings (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/people</span></code>)</p></li>
+<li><p>Retrieve specific person data (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/person?id=:personId</span></code>)</p></li>
+<li><p>Create person embeddings (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/person</span></code>)</p></li>
+<li><p>Search for people in videos (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/person/search?id=:personId&amp;videoId=:videoId</span></code>)</p></li>
+</ul>
+<p><strong>Video Processing:</strong></p>
+<ul class="simple">
+<li><p>Upload videos for processing (<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/video</span></code>)</p></li>
+<li><p>List user’s videos (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/videos</span></code>)</p></li>
+<li><p>Retrieve specific video (<code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/videos?id=:videoId</span></code>)</p></li>
+<li><p>Delete user videos (<code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/video?id=:videoId</span></code>)</p></li>
+</ul>
+</section>
+<section id="data-persistence">
+<h3>Data Persistence<a class="headerlink" href="#data-persistence" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Secure file storage for videos and images</p></li>
+<li><p>Database management for user data and embeddings</p></li>
+<li><p>Efficient video metadata handling</p></li>
+<li><p>Integration with AI backend for processing</p></li>
+</ul>
+</section>
+</section>
+<section id="watchme-ui-features">
+<h2>WatchMe UI Features<a class="headerlink" href="#watchme-ui-features" title="Link to this heading"></a></h2>
+<p>The Frontend application (<a class="reference external" href="https://github.com/beatrizamante/watchme_frontend">WatchMe UI</a>) provides an intuitive user interface featuring:</p>
+<section id="user-interface">
+<h3>User Interface<a class="headerlink" href="#user-interface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Clean, responsive design for all device types</p></li>
+<li><p>Intuitive file upload interface for images and videos</p></li>
+</ul>
+</section>
+<section id="file-management">
+<h3>File Management<a class="headerlink" href="#file-management" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Drag-and-drop file upload functionality</p></li>
+<li><p>Support for multiple image and video formats</p></li>
+<li><p>File size validation and error handling</p></li>
+</ul>
+</section>
+<section id="user-experience">
+<h3>User Experience<a class="headerlink" href="#user-experience" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Secure user authentication and registration flows</p></li>
+<li><p>User profile management interface</p></li>
+<li><p>Dashboard for managing uploaded content</p></li>
+<li><p>Real-time notifications and status updates</p></li>
+</ul>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Video playback with bounding box overlays</p></li>
+<li><p>Person tracking visualization in real-time</p></li>
+<li><p>Results display with confidence scores</p></li>
+<li><p>Export capabilities for processed results</p></li>
+</ul>
+</section>
+</section>
+<section id="system-architecture">
+<h2>System Architecture<a class="headerlink" href="#system-architecture" title="Link to this heading"></a></h2>
+<p>The complete WatchMe system follows a microservices architecture pattern:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                    WatchMe Frontend                         │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │   File Upload   │  │  User Interface │  │ Video Player│ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                                │
+                                │ HTTP/WebSocket
+                                ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    WatchMe API                              │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │ Authentication  │  │ User Management │  │File Storage │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                                │
+                                │ HTTP/WebSocket
+                                ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 WatchMe AI Backend                          │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │      YOLO       │  │     OSNet       │  │  WebSocket  │ │
+│  │   Detection     │  │   Encoding      │  │  Protocol   │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+<section id="data-flow">
+<h3>Data Flow<a class="headerlink" href="#data-flow" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>User Interaction</strong>: Users interact with the frontend to upload images/videos</p></li>
+<li><p><strong>API Processing</strong>: The TypeScript API handles authentication, file storage, and business logic</p></li>
+<li><p><strong>AI Processing</strong>: The AI backend performs person detection and re-identification</p></li>
+<li><p><strong>Real-time Updates</strong>: WebSocket connections enable real-time tracking and notifications</p></li>
+<li><p><strong>Results Display</strong>: Processed results are displayed in the frontend with visual overlays</p></li>
+</ol>
+</section>
+<section id="integration-points">
+<h3>Integration Points<a class="headerlink" href="#integration-points" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Frontend ↔ API</strong>: RESTful HTTP communication and WebSocket for real-time updates</p></li>
+<li><p><strong>API ↔ AI Backend</strong>: HTTP requests for batch processing and WebSocket for live streaming</p></li>
+<li><p><strong>Shared Authentication</strong>: JWT tokens passed through the entire system</p></li>
+<li><p><strong>File Management</strong>: Coordinated file storage and retrieval across components</p></li>
+</ul>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<p>To set up the complete WatchMe system:</p>
+<ol class="arabic simple">
+<li><p><strong>AI Backend</strong>: Follow the <a class="reference internal" href="../usage/configuration.html"><span class="doc">Configuration Guide</span></a> guide for this repository</p></li>
+<li><p><strong>TypeScript API</strong>: See the <a class="reference external" href="https://github.com/beatrizamante/watchme_api">WatchMe API documentation</a></p></li>
+<li><p><strong>Frontend</strong>: Refer to the <a class="reference external" href="https://github.com/beatrizamante/watchme_frontend">WatchMe UI setup guide</a></p></li>
+</ol>
+<p>Each component can be developed and deployed independently, making the system highly modular and scalable.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="WatchMe AI Backend Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="requeriments.html" class="btn btn-neutral float-right" title="Requirements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Beatriz Amante.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

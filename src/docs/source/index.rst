@@ -12,13 +12,12 @@ YOLO object detection with OSNet person re-identification for real-time video an
    :caption: Introduction:
 
    intro/about
-   intro/requirements
+   intro/requeriments
 
 .. toctree::
    :maxdepth: 2
    :caption: Getting Started:
 
-   usage/installation
    usage/quickstart
    usage/configuration
 
@@ -29,20 +28,11 @@ YOLO object detection with OSNet person re-identification for real-time video an
    guide/training
    guide/inference
    guide/api-endpoints
-   guide/video-processing
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference:
-
-   api/yolo
-   api/osnet
 
 .. toctree::
    :maxdepth: 2
    :caption: Examples:
 
-   examples/basic-usage
    examples/video-search
    examples/websocket
 

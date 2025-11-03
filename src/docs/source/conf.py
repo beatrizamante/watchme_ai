@@ -34,7 +34,7 @@ html_static_path = ['_static']
 templates_path = ['_templates']
 exclude_patterns = []
 
-language = 'python/typescript'
+language = 'en'
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
