@@ -6,14 +6,13 @@ venv*
 __pycache__/
 *.py[cod]
 
-src/infrastructure/dataset/yolo/images/*
-src/infrastructure/dataset/yolo/labels/*
-src/infrastructure/dataset/osnet/images/*
-src/infrastructure/dataset/osnet/labels/*
+src/dataset/yolo/images/*
+src/dataset/yolo/labels/*
+src/dataset/osnet/images/*
+src/dataset/osnet/labels/*
 runs/
 deep-person-reid/
+
 *.rar
 *.zip
 *.tar.gz
-yolo11n.pt
-.issort.cfg
