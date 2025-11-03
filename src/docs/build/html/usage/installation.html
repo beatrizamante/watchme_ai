@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="python/typescript" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Guide &mdash; watchme 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a02c20b9"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quick Start Guide" href="quickstart.html" />
+    <link rel="prev" title="About WatchMe AI" href="../intro/about.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            watchme
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/about.html">About WatchMe AI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/about.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/about.html#key-features">Key Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../intro/about.html#person-re-identification">Person Re-identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../intro/about.html#object-detection">Object Detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../intro/about.html#security">Security</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../intro/about.html#architecture">Architecture</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-system-setup">Step 1: System Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-python">Install Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-build-tools">Install Build Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-project-setup">Step 2: Project Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#clone-repository">Clone Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-virtual-environment">Create Virtual Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-install-dependencies">Step 3: Install Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-python-packages">Install Python Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verify-installation">Verify Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-gpu-setup-optional">Step 4: GPU Setup (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-configuration">Step 5: Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-encryption-key">Generate Encryption Key</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-1-start-the-server">Step 1: Start the Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-2-test-the-api">Step 2: Test the API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#upload-a-reference-image">Upload a Reference Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html#search-in-a-video">Search in a Video</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#step-3-websocket-connection">Step 3: WebSocket Connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#what-s-next">What's Next?</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">watchme</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading"></a></h1>
+<section id="step-1-system-setup">
+<h2>Step 1: System Setup<a class="headerlink" href="#step-1-system-setup" title="Link to this heading"></a></h2>
+<section id="install-python">
+<h3>Install Python<a class="headerlink" href="#install-python" title="Link to this heading"></a></h3>
+<p>Download Python 3.11 from <a class="reference external" href="https://www.python.org/downloads/">python.org</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+</pre></div>
+</div>
+</section>
+<section id="install-build-tools">
+<h3>Install Build Tools<a class="headerlink" href="#install-build-tools" title="Link to this heading"></a></h3>
+<p><strong>Windows:</strong></p>
+<p>Download and install <a class="reference external" href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">Visual Studio Build Tools</a></p>
+<p><strong>Linux (Ubuntu/Debian):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>python3-dev
+</pre></div>
+</div>
+<p><strong>macOS:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>xcode-select<span class="w"> </span>--install
+</pre></div>
+</div>
+</section>
+</section>
+<section id="step-2-project-setup">
+<h2>Step 2: Project Setup<a class="headerlink" href="#step-2-project-setup" title="Link to this heading"></a></h2>
+<section id="clone-repository">
+<h3>Clone Repository<a class="headerlink" href="#clone-repository" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/beatrizamante/watchme_ai.git
+<span class="nb">cd</span><span class="w"> </span>watchme_ai
+</pre></div>
+</div>
+</section>
+<section id="create-virtual-environment">
+<h3>Create Virtual Environment<a class="headerlink" href="#create-virtual-environment" title="Link to this heading"></a></h3>
+<p><strong>Using venv (recommended):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+
+<span class="c1"># Windows</span>
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+
+<span class="c1"># Linux/macOS</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</pre></div>
+</div>
+<p><strong>Using conda:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>watchme_ai<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11
+conda<span class="w"> </span>activate<span class="w"> </span>watchme_ai
+</pre></div>
+</div>
+</section>
+</section>
+<section id="step-3-install-dependencies">
+<h2>Step 3: Install Dependencies<a class="headerlink" href="#step-3-install-dependencies" title="Link to this heading"></a></h2>
+<section id="install-python-packages">
+<h3>Install Python Packages<a class="headerlink" href="#install-python-packages" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="verify-installation">
+<h3>Verify Installation<a class="headerlink" href="#verify-installation" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import torch, ultralytics, torchreid; print(&#39;All packages installed successfully!&#39;)&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="step-4-gpu-setup-optional">
+<h2>Step 4: GPU Setup (Optional)<a class="headerlink" href="#step-4-gpu-setup-optional" title="Link to this heading"></a></h2>
+<p>For NVIDIA GPU acceleration:</p>
+<ol class="arabic simple">
+<li><p>Install <a class="reference external" href="https://developer.nvidia.com/cuda-downloads">CUDA Toolkit</a></p></li>
+<li><p>Install <a class="reference external" href="https://developer.nvidia.com/cudnn">cuDNN</a></p></li>
+<li><p>Verify GPU detection:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import torch; print(f&#39;CUDA available: {torch.cuda.is_available()}&#39;)&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-5-configuration">
+<h2>Step 5: Configuration<a class="headerlink" href="#step-5-configuration" title="Link to this heading"></a></h2>
+<section id="environment-variables">
+<h3>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Copy the example environment file:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+cp<span class="w"> </span>.env.osnet.example<span class="w"> </span>.env.osnet
+cp<span class="w"> </span>.env.yolo.example<span class="w"> </span>.env.yolo
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Edit <cite>.env</cite> with your settings:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example configuration</span>
+<span class="nv">YOLO_MODEL_PATH</span><span class="o">=</span>src/infrastructure/yolo/client/best.pt
+<span class="nv">OSNET_SAVE_DIR</span><span class="o">=</span>src/infrastructure/osnet/client
+<span class="nv">ENCRYPTION_KEY</span><span class="o">=</span>your_base64_key_here
+</pre></div>
+</div>
+</section>
+<section id="generate-encryption-key">
+<h3>Generate Encryption Key<a class="headerlink" href="#generate-encryption-key" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
+
+<span class="c1"># Generate a 256-bit key</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">key_b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ENCRYPTION_KEY=</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After installation, proceed to <a class="reference internal" href="quickstart.html"><span class="doc">Quick Start Guide</span></a> to run your first inference.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../intro/about.html" class="btn btn-neutral float-left" title="About WatchMe AI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Beatriz Amante.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
