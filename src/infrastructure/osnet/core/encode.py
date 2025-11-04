@@ -7,7 +7,7 @@ import torch
 
 from config import OSNetSettings
 from src.infrastructure.osnet.client.model import OSNetModel
-from src.infrastructure.osnet.plotting.shared.load_checkpoint import load_checkpoint
+from src.infrastructure.osnet.scripts.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.scripts.transformers.transformers import \
     create_transforms, preprocess_image
 
