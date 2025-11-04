@@ -9,6 +9,7 @@ ray
 tqdm
 fastapi
 sphinx
+sphinx_rtd_theme
 uvicorn
 torch
 torchvision
