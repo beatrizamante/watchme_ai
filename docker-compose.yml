@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  watchme-ai:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5000
+    volumes:
+      - ./models:/app/models
+      - ./datasets:/app/datasets
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

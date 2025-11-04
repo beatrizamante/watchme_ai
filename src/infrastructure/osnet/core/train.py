@@ -95,16 +95,7 @@ class OSNetTrainer:
             test_only=False,
         )
 
-        try:
-            test_results = engine.state.rank1 if hasattr(engine.state, 'rank1') else 0.0
-            map_results = engine.state.mAP if hasattr(engine.state, 'mAP') else 0.0
-        except AttributeError:
-            test_results = 0.85
-            map_results = 0.75
-
         results = {
-            "rank1": test_results,
-            "mAP": map_results,
             "save_dir": self.settings.OSNET_SAVE_DIR,
             "final_epoch": max_epoch,
         }

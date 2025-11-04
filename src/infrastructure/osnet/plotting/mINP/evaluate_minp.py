@@ -10,7 +10,7 @@ from config import OSNetSettings
 from src.infrastructure.osnet.client.model import OSNetModel
 from src.infrastructure.osnet.plotting.mINP.calculate_minp import calculate_minp
 from src.infrastructure.osnet.plotting.shared.extract_features import extract_features
-from src.infrastructure.osnet.plotting.shared.load_checkpoint import load_checkpoint
+from src.infrastructure.osnet.scripts.load_checkpoint import load_checkpoint
 
 class OSNetmINPEvaluator:
     """Evaluate OSNet model using mean Inverse Negative Penalty (mINP) metrics."""
