@@ -30,12 +30,8 @@ async def upload_person_image(request: ImageModel):
 
         embedding = create_person_embedding(image)
 
-        embedding_b64 = base64.b64encode(embedding.tobytes()).decode('utf-8')
-
         return {
-            "embedding": embedding_b64,
-            "shape": list(embedding.shape),
-            "dtype": str(embedding.dtype),
+            "embedding": embedding,
             "status": "success"
         }
 

@@ -1,25 +1,34 @@
 import numpy as np
 
-def compute_euclidean_distance(features1, features2):
+def compute_euclidean_distance(embedding1, embedding2):
     """
-    Compute Euclidean distance between two feature vectors or matrices.
+    Compute Euclidean distance between two person embeddings.
 
     Args:
-        features1: Feature vector/matrix (1D or 2D numpy array)
-        features2: Feature vector/matrix (1D or 2D numpy array)
+        embedding1: Person embedding (1D array, shape: 512)
+        embedding2: Person embedding (1D array, shape: 512)
 
     Returns:
-        float or numpy.ndarray: Distance(s)
+        float: Euclidean distance
     """
-    if features1.ndim == 1:
-        features1 = features1.reshape(1, -1)
-    if features2.ndim == 1:
-        features2 = features2.reshape(1, -1)
+    return float(np.linalg.norm(embedding1 - embedding2))
 
-    diff = features1[:, np.newaxis, :] - features2[np.newaxis, :, :]
-    dist = np.linalg.norm(diff, axis=2)
+def compute_batch_distances(target_embedding, candidate_embeddings):
+    """
+    Compare target person embedding against multiple candidates.
 
-    if dist.shape == (1, 1):
-        return dist[0, 0]
+    Args:
+        target_embedding: Target person embedding (1D array, shape: 512)
+        candidate_embeddings: Multiple embeddings (2D array, shape: N x 512)
 
-    return dist
+    Returns:
+        numpy.ndarray: Distances to each candidate (shape: N)
+    """
+    if target_embedding.ndim != 1:
+        target_embedding = target_embedding.flatten()
+
+    if candidate_embeddings.ndim == 1:
+        candidate_embeddings = candidate_embeddings.reshape(1, -1)
+
+    distances = np.linalg.norm(candidate_embeddings - target_embedding, axis=1)
+    return distances
