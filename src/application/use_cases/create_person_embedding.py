@@ -1,3 +1,4 @@
+import base64
 import logging
 import numpy as np
 from src._lib.encrypt import encrypt_embedding
@@ -30,7 +31,7 @@ def create_person_embedding(file):
 
         encrypted_embedding = encrypt_embedding(encoding)
 
-        return encrypted_embedding
+        return base64.b64encode(encrypted_embedding).decode('utf-8')
 
     except Exception as e:
         logging.error(f"Error during encoding: {str(e)}")

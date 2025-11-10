@@ -1,5 +1,4 @@
 import logging
-from pydantic import BaseModel
 import base64
 import numpy as np
 import cv2
@@ -17,7 +16,7 @@ async def upload_person_image(request: ImageModel):
     """
     Upload an image and get the person embedding.
     """
-    print(f"Received base64 image")
+    print("The image________", request.image)
 
     try:
         image_bytes = base64.b64decode(request.image)
@@ -34,6 +33,7 @@ async def upload_person_image(request: ImageModel):
             "embedding": embedding,
             "status": "success"
         }
+
 
     except Exception as e:
         logging.error(f"Error processing image: {str(e)}")
