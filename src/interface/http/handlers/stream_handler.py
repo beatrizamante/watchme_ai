@@ -9,7 +9,7 @@ from fastapi import WebSocket
 from src._lib.base64_decoder import decode_base64_frame
 from src.application.use_cases.predict_person import predict_person_on_stream
 
-async def handle_start_tracking(session_id: str, data: dict, manager):
+async def handle_start_tracking(session_id: str, data: dict, manager):  # Add manager parameter
     """Start continuous video tracking"""
     person_embed = data["person_embed"]
     video_source = data.get("video_source", 0)
@@ -33,7 +33,7 @@ async def handle_start_tracking(session_id: str, data: dict, manager):
 
     await manager.send_status(session_id, "tracking_started", f"Started tracking on source: {video_source}")
 
-async def handle_single_frame(session_id: str, data: dict, manager):
+async def handle_single_frame(session_id: str, data: dict, manager):  # Add manager parameter
     """Process a single frame"""
     try:
         frame_data = data["frame"]  # base64 encoded
@@ -60,7 +60,7 @@ async def handle_single_frame(session_id: str, data: dict, manager):
         logging.error(f"Error processing single frame for {session_id}: {e}")
         await manager.send_status(session_id, "error", str(e))
 
-async def handle_stop_tracking(session_id: str, manager):
+async def handle_stop_tracking(session_id: str, manager):  # Add manager parameter
     """Stop tracking session"""
     if session_id in manager.tracking_sessions:
         manager.tracking_sessions[session_id]["active"] = False
@@ -130,32 +130,3 @@ async def process_video_feed(session_id: str, manager):
     finally:
         cap.release()
         await manager.send_status(session_id, "video_closed")
-
-async def send_matches(self, session_id: str, matches: list, frame_info: 'Optional[dict]' = None):
-    if session_id in self.active_connections:
-        try:
-            websocket = self.active_connections[session_id]
-            response = {
-                "type": "matches",
-                "matches": matches,
-                "timestamp": time.time(),
-                "frame_info": frame_info or {}
-            }
-            await websocket.send_json(response)
-        except Exception as e:
-            logging.error(f"Error sending matches to {session_id}: {e}")
-            self.disconnect(session_id)
-
-async def send_status(active_connections: Dict[str, WebSocket], session_id: str, status: str, message: str = ""):
-    if session_id in active_connections:
-        try:
-            websocket = active_connections[session_id]
-            response = {
-                "type": "status",
-                "status": status,
-                "message": message,
-                "timestamp": time.time()
-            }
-            await websocket.send_json(response)
-        except Exception as e:
-            logging.error(f"Error sending status to {session_id}: {e}")
