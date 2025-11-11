@@ -17,16 +17,13 @@ class ConnectionHandler:
         self.active_connections[session_id] = websocket
         logging.info(f"WebSocket connected: {session_id}")
 
-        # Send connection confirmation
         await self.send_status(session_id, "connected", f"Session {session_id} established")
 
     def disconnect(self, session_id: str):
-        # Cancel any running tasks
         if session_id in self.processing_tasks:
             self.processing_tasks[session_id].cancel()
             del self.processing_tasks[session_id]
 
-        # Clean up session data
         if session_id in self.active_connections:
             del self.active_connections[session_id]
         if session_id in self.tracking_sessions:

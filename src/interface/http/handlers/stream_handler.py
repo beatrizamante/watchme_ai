@@ -33,19 +33,17 @@ async def handle_start_tracking(session_id: str, data: dict, manager):  # Add ma
 
     await manager.send_status(session_id, "tracking_started", f"Started tracking on source: {video_source}")
 
-async def handle_single_frame(session_id: str, data: dict, manager):  # Add manager parameter
+async def handle_single_frame(session_id: str, data: dict, manager):
     """Process a single frame"""
     try:
-        frame_data = data["frame"]  # base64 encoded
+        frame_data = data["frame"]
         person_embed = data["person_embed"]
 
-        # Decode frame
         frame = decode_base64_frame(frame_data)
         if frame is None:
             await manager.send_status(session_id, "error", "Failed to decode frame")
             return
 
-        # Process frame
         matches = predict_person_on_stream(person_embed, frame)
 
         frame_info = {
@@ -60,7 +58,7 @@ async def handle_single_frame(session_id: str, data: dict, manager):  # Add mana
         logging.error(f"Error processing single frame for {session_id}: {e}")
         await manager.send_status(session_id, "error", str(e))
 
-async def handle_stop_tracking(session_id: str, manager):  # Add manager parameter
+async def handle_stop_tracking(session_id: str, manager):
     """Stop tracking session"""
     if session_id in manager.tracking_sessions:
         manager.tracking_sessions[session_id]["active"] = False
@@ -80,7 +78,7 @@ async def process_video_feed(session_id: str, manager):
     video_source = session["video_source"]
     person_embed = session["person_embed"]
     fps_limit = session["fps_limit"]
-    frame_interval = 1.0 / fps_limit  # Time between frames
+    frame_interval = 1.0 / fps_limit
 
     cap = cv2.VideoCapture(video_source)
 
@@ -93,7 +91,6 @@ async def process_video_feed(session_id: str, manager):
         while session.get("active", False):
             current_time = time.time()
 
-            # Rate limiting
             if current_time - last_process_time < frame_interval:
                 await asyncio.sleep(0.01)  # Short sleep
                 continue
@@ -105,8 +102,7 @@ async def process_video_feed(session_id: str, manager):
 
             frame_count += 1
 
-            # Process every Nth frame to reduce load
-            if frame_count % 3 == 0:  # Process every 3rd frame
+            if frame_count % 3 == 0:
                 try:
                     matches = predict_person_on_stream(person_embed, frame)
 
