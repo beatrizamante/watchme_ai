@@ -2,12 +2,15 @@ import logging
 import uvicorn
 
 def make_server():
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(name)s - %(message)s")
-    logger = logging.getLogger("uvicorn")
+    logger = logging.getLogger("watchmeai")
+    logger.info("Configuring server...")
 
     config = uvicorn.Config("main:app",
-                            host="0.0.0.0",
-                            port=5000,
-                            )
+                        host="0.0.0.0",
+                        port=5000,
+                        log_level="debug",
+                        use_colors=True
+                        )
     server = uvicorn.Server(config)
-    return server, logger
+    logger.info("Server configured successfully")
+    return server

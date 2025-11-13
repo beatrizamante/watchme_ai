@@ -11,6 +11,7 @@ src/dataset/yolo/labels/*
 src/dataset/osnet/images/*
 src/dataset/osnet/labels/*
 runs/
+logs/
 deep-person-reid/
 
 *.rar

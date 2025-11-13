@@ -1,15 +1,13 @@
 import asyncio
 import logging
 import time
-from typing import Dict, Optional
 
 import cv2
-from fastapi import WebSocket
 
 from src._lib.base64_decoder import decode_base64_frame
 from src.application.use_cases.predict_person import predict_person_on_stream
 
-async def handle_start_tracking(session_id: str, data: dict, manager):
+async def handle_start_tracking(session_id: str, data: dict, manager):  # Add manager parameter
     """Start continuous video tracking"""
     person_embed = data["person_embed"]
     video_source = data.get("video_source", 0)
@@ -36,16 +34,14 @@ async def handle_start_tracking(session_id: str, data: dict, manager):
 async def handle_single_frame(session_id: str, data: dict, manager):
     """Process a single frame"""
     try:
-        frame_data = data["frame"]  # base64 encoded
+        frame_data = data["frame"]
         person_embed = data["person_embed"]
 
-        # Decode frame
         frame = decode_base64_frame(frame_data)
         if frame is None:
             await manager.send_status(session_id, "error", "Failed to decode frame")
             return
 
-        # Process frame
         matches = predict_person_on_stream(person_embed, frame)
 
         frame_info = {
@@ -80,7 +76,7 @@ async def process_video_feed(session_id: str, manager):
     video_source = session["video_source"]
     person_embed = session["person_embed"]
     fps_limit = session["fps_limit"]
-    frame_interval = 1.0 / fps_limit  # Time between frames
+    frame_interval = 1.0 / fps_limit
 
     cap = cv2.VideoCapture(video_source)
 
@@ -93,7 +89,6 @@ async def process_video_feed(session_id: str, manager):
         while session.get("active", False):
             current_time = time.time()
 
-            # Rate limiting
             if current_time - last_process_time < frame_interval:
                 await asyncio.sleep(0.01)  # Short sleep
                 continue
@@ -105,8 +100,7 @@ async def process_video_feed(session_id: str, manager):
 
             frame_count += 1
 
-            # Process every Nth frame to reduce load
-            if frame_count % 3 == 0:  # Process every 3rd frame
+            if frame_count % 3 == 0:
                 try:
                     matches = predict_person_on_stream(person_embed, frame)
 
@@ -130,32 +124,3 @@ async def process_video_feed(session_id: str, manager):
     finally:
         cap.release()
         await manager.send_status(session_id, "video_closed")
-
-async def send_matches(self, session_id: str, matches: list, frame_info: 'Optional[dict]' = None):
-    if session_id in self.active_connections:
-        try:
-            websocket = self.active_connections[session_id]
-            response = {
-                "type": "matches",
-                "matches": matches,
-                "timestamp": time.time(),
-                "frame_info": frame_info or {}
-            }
-            await websocket.send_json(response)
-        except Exception as e:
-            logging.error(f"Error sending matches to {session_id}: {e}")
-            self.disconnect(session_id)
-
-async def send_status(active_connections: Dict[str, WebSocket], session_id: str, status: str, message: str = ""):
-    if session_id in active_connections:
-        try:
-            websocket = active_connections[session_id]
-            response = {
-                "type": "status",
-                "status": status,
-                "message": message,
-                "timestamp": time.time()
-            }
-            await websocket.send_json(response)
-        except Exception as e:
-            logging.error(f"Error sending status to {session_id}: {e}")

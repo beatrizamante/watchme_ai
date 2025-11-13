@@ -4,20 +4,17 @@ import cv2
 
 def get_bounding_boxes(
     images,
-    results
+    results,
+    frame_info=None
 ) -> Union[List[Dict[str, Any]], None]:
     """
     Extracts bounding boxes from YOLO detection results and crops corresponding regions from the input images.
     Args:
         images (list): List of image file paths or image arrays (numpy.ndarray).
         results (list): List of YOLO detection results, each containing bounding box information.
+        frame_info (dict, optional): Dictionary with frame metadata like frame_number and timestamp.
     Returns:
-        list: A list of dictionaries, each containing:
-            - 'detections': List of detections, where each detection is a dictionary with:
-                - 'bbox': List of bounding box coordinates [x1, y1, x2, y2] as floats.
-                - 'cropped_image': Cropped image region corresponding to the bounding box (numpy.ndarray).
-                - 'crop_coordinates': List of bounding box coordinates [x1, y1, x2, y2] as integers.
-            - 'original_image': The original image (numpy.ndarray).
+        list: A list of dictionaries, each containing detection data with optional timestamp info.
     """
     processed_results = []
 
@@ -48,11 +45,22 @@ def get_bounding_boxes(
                         'cropped_image': cropped_person,
                         'crop_coordinates': [x1, y1, x2, y2]
                     }
+
+                    if frame_info:
+                        detection['frame_number'] = frame_info.get('frame_number', 0)
+                        detection['timestamp'] = frame_info.get('timestamp', 0.0)
+
                     detections.append(detection)
 
-        processed_results.append({
+        frame_data = {
             'detections': detections,
             'original_image': original_image
-        })
+        }
 
-        return processed_results
+        if frame_info:
+            frame_data['frame_number'] = frame_info.get('frame_number', 0)
+            frame_data['timestamp'] = frame_info.get('timestamp', 0.0)
+
+        processed_results.append(frame_data)
+
+    return processed_results

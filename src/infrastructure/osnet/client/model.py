@@ -29,6 +29,7 @@ class OSNetModel:
             name='osnet_ibn_x1_0',
             num_classes=num_classes or self.settings.OSNET_NUM_CLASSES,
             loss='triplet',
+            pretrained=False
         )
 
         if torch.cuda.is_available():

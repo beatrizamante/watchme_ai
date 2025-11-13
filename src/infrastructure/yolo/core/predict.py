@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, List, Union
 
+import cv2
 import numpy as np
 
 from config import YOLOSettings
@@ -9,23 +10,19 @@ from src.infrastructure.yolo.client.model import yolo_client
 from src.infrastructure.yolo.scripts.get_bounding_boxes import \
     get_bounding_boxes
 
+settings = YOLOSettings()
+model = yolo_client(settings.YOLO_MODEL_PATH)
+
 def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> List[Dict[str, Any]]:
     """
-    Runs object detection and returns both bounding boxes and cropped person images.
+    Runs object detection on images.
 
     Args:
         images: Single image path/array or list of image paths/arrays to process.
 
     Returns:
         List of dictionaries containing detection results for each image.
-        Returns empty list if no detections found.
-
-    Raises:
-        RuntimeError: If YOLO prediction fails.
-        ValueError: If input images are invalid.
     """
-    settings = YOLOSettings()
-    model = yolo_client(settings.YOLO_MODEL_PATH)
 
     if not isinstance(images, list):
         images = [images]
@@ -40,7 +37,6 @@ def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> Lis
         )
 
         results_list = list(results)
-
         if not results_list:
             return []
 
@@ -49,3 +45,94 @@ def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> Lis
 
     except Exception as e:
         raise RuntimeError(f"YOLO prediction failed: {str(e)}") from e
+
+def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]:
+    """
+    Runs object detection on video frames with timestamp information.
+    """
+    if not video_path.lower().endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv')):
+        raise ValueError(f"Unsupported video format: {video_path}")
+
+    import os
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Video file not found: {video_path}")
+
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        raise RuntimeError(f"Could not open video file: {video_path}")
+
+    results = []
+    frame_count = 0
+    fps = cap.get(cv2.CAP_PROP_FPS)
+
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            if frame_count % frame_skip == 0:
+                try:
+                    frame_results = model.predict(
+                        frame,
+                        conf=0.28,
+                        classes=[0],
+                        verbose=False
+                    )
+
+                    frame_info = {
+                        'frame_number': frame_count,
+                        'timestamp': frame_count / fps
+                    }
+
+                    if hasattr(frame_results, '__iter__') and not isinstance(frame_results, (str, bytes)):
+                        results_list = list(frame_results)
+                    else:
+                        results_list = [frame_results]
+
+
+                    frame_detections = get_bounding_boxes([frame], results_list, frame_info)
+
+                    if frame_detections:
+                        results.extend(frame_detections)
+
+                except Exception as frame_error:
+                    print(f"Error processing frame {frame_count}: {frame_error}")
+                    continue
+
+            frame_count += 1
+
+    finally:
+        cap.release()
+
+    return results
+
+def predict_single_frame(frame: np.ndarray, frame_number: int = 0, timestamp: float = 0.0) -> List[Dict[str, Any]]:
+    """
+    Runs object detection on a single frame (for WebSocket streaming).
+
+    Args:
+        frame: OpenCV image array (numpy.ndarray)
+        frame_number: Frame number for tracking
+        timestamp: Timestamp in seconds
+    Returns:
+        List of dictionaries containing detection results.
+    """
+    try:
+        results = model.predict(
+            frame,
+            conf=0.28,
+            classes=[0],
+            verbose=False
+        )
+
+        frame_info = {
+            'frame_number': frame_number,
+            'timestamp': timestamp
+        }
+
+        frame_detections = get_bounding_boxes([frame], [results], frame_info)
+        return frame_detections if frame_detections else []
+
+    except Exception as e:
+        raise RuntimeError(f"Frame prediction failed: {str(e)}") from e
