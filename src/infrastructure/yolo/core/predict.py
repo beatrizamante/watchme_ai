@@ -48,14 +48,7 @@ def predict(images: Union[str, np.ndarray, List[Union[str, np.ndarray]]]) -> Lis
 
 def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]:
     """
-    Runs object detection on video frames.
-
-    Args:
-        video_path: Path to the video file
-        frame_skip: Process every Nth frame (default: 30 = ~1 FPS for 30fps video)
-
-    Returns:
-        List of dictionaries containing detection results for each processed frame.
+    Runs object detection on video frames with timestamp information.
     """
     if not video_path.lower().endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv')):
         raise ValueError(f"Unsupported video format: {video_path}")
@@ -70,6 +63,7 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
 
     results = []
     frame_count = 0
+    fps = cap.get(cv2.CAP_PROP_FPS)
 
     try:
         while True:
@@ -79,7 +73,6 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
 
             if frame_count % frame_skip == 0:
                 try:
-                    # Get YOLO results for single frame
                     frame_results = model.predict(
                         frame,
                         conf=0.28,
@@ -87,12 +80,20 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
                         verbose=False
                     )
 
-                    frame_detections = get_bounding_boxes([frame], frame_results)
+                    frame_info = {
+                        'frame_number': frame_count,
+                        'timestamp': frame_count / fps
+                    }
+
+                    if hasattr(frame_results, '__iter__') and not isinstance(frame_results, (str, bytes)):
+                        results_list = list(frame_results)
+                    else:
+                        results_list = [frame_results]
+
+
+                    frame_detections = get_bounding_boxes([frame], results_list, frame_info)
 
                     if frame_detections:
-                        for detection in frame_detections:
-                            detection['frame_number'] = frame_count
-                            detection['timestamp'] = frame_count / cap.get(cv2.CAP_PROP_FPS)
                         results.extend(frame_detections)
 
                 except Exception as frame_error:
@@ -106,17 +107,17 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
 
     return results
 
-def predict_single_frame(frame: np.ndarray) -> List[Dict[str, Any]]:
+def predict_single_frame(frame: np.ndarray, frame_number: int = 0, timestamp: float = 0.0) -> List[Dict[str, Any]]:
     """
     Runs object detection on a single frame (for WebSocket streaming).
 
     Args:
         frame: OpenCV image array (numpy.ndarray)
-
+        frame_number: Frame number for tracking
+        timestamp: Timestamp in seconds
     Returns:
         List of dictionaries containing detection results.
     """
-
     try:
         results = model.predict(
             frame,
@@ -125,7 +126,12 @@ def predict_single_frame(frame: np.ndarray) -> List[Dict[str, Any]]:
             verbose=False
         )
 
-        frame_detections = get_bounding_boxes([frame], [results])
+        frame_info = {
+            'frame_number': frame_number,
+            'timestamp': timestamp
+        }
+
+        frame_detections = get_bounding_boxes([frame], [results], frame_info)
         return frame_detections if frame_detections else []
 
     except Exception as e:
