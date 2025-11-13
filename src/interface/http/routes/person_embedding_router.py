@@ -18,7 +18,6 @@ async def upload_person_image(request: ImageModel):
     """
     try:
         image_bytes = base64.b64decode(request.image)
-
         nparr = np.frombuffer(image_bytes, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -29,7 +28,8 @@ async def upload_person_image(request: ImageModel):
 
         return {
             "embedding": embedding,
-            "status": "success"
+            "status": "success",
+            "method": "multi_frame"
         }
 
 
@@ -41,15 +41,13 @@ async def upload_person_image(request: ImageModel):
 async def predict_person(request: FindPersonRequest):
     """Search requisition for person of interest in a video or stream"""
     logger.info("Starting person search")
-    logger.debug(f"Request: {request.video} and {request.person}")
 
+    try:
+        matches = predict_person_on_stream(request.person.embedding, request.video.path)
+        logger.info(f"Found {len(matches)} matches")
+        logger.debug(f"Matches: {matches}")
+        return {"matches": matches}
 
-    #try:
-        #matches = predict_person_on_stream(person.embedding, video.path)
-        #logger.info(f"Found {len(matches)} matches")
-        #logger.debug(f"Matches: {matches}")
-        #return {"matches": matches}
-
-    #except Exception as e:
-        #logger.error(f"Error during prediction: {str(e)}", exc_info=True)
-        #raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error during prediction: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))

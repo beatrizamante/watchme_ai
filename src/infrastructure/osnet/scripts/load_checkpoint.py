@@ -16,14 +16,37 @@ def load_checkpoint(weights_path, device, model):
         Uses strict=False when loading state dict to allow partial loading.
     """
     checkpoint = torch.load(weights_path, map_location=device, weights_only=False)
-    state_dict = checkpoint['state_dict']
+    state_dict = checkpoint.get('state_dict', checkpoint)
 
-    state_dict = {k: v for k, v in state_dict.items()
-                  if not k.startswith('classifier') and
-                     not k.endswith('running_mean') and
-                     not k.endswith('running_var')}
+    model_param_names = set(name for name, _ in model.named_parameters())
+    model_buffer_names = set(name for name, _ in model.named_buffers())
+    model_all_names = model_param_names | model_buffer_names
 
-    model.load_state_dict(state_dict, strict=False)
-    model.to(device)
+    filtered_state_dict = {}
+    skipped_keys = []
+
+    for key, value in state_dict.items():
+        if key.startswith('classifier') or key.startswith('fc'):
+            skipped_keys.append(key)
+            continue
+
+        if key in model_all_names:
+            filtered_state_dict[key] = value
+        else:
+            skipped_keys.append(key)
+            print(f"Skipping incompatible key: {key}")
+
+    print(f"Kept {len(filtered_state_dict)} keys, skipped {len(skipped_keys)} keys")
+
+    missing_keys, unexpected_keys = model.load_state_dict(filtered_state_dict, strict=False)
+
+    if missing_keys:
+        print(f"⚠️  Missing keys: {missing_keys}")
+    if unexpected_keys:
+        print(f"⚠️  Unexpected keys: {unexpected_keys}")
+
     model.eval()
+    model = model.to(device)
+
+    print("✅ Checkpoint loaded successfully")
     return model
