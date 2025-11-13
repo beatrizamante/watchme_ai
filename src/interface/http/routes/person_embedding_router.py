@@ -5,10 +5,10 @@ import cv2
 from fastapi import APIRouter, HTTPException
 from src.application.use_cases.create_person_embedding import create_person_embedding
 from src.application.use_cases.predict_person import predict_person_on_stream
+from src.domain.DetectionModel import FindPersonRequest
 from src.domain.Image import ImageModel
-from src.domain.Person import Person
-from src.domain.Video import Video
 
+logger = logging.getLogger("watchmeai")
 router = APIRouter()
 
 @router.post("/upload-embedding")
@@ -16,8 +16,6 @@ async def upload_person_image(request: ImageModel):
     """
     Upload an image and get the person embedding.
     """
-    print("The image________", request.image)
-
     try:
         image_bytes = base64.b64decode(request.image)
 
@@ -40,9 +38,18 @@ async def upload_person_image(request: ImageModel):
         raise HTTPException(status_code=422, detail=f"Failed to process image: {str(e)}")
 
 @router.post("/find")
-async def predict_person(person: Person, video: Video):
-    """
-    Search requisition for person of interest in a video or stream
-    """
-    matches = predict_person_on_stream(person.embed, video.path)
-    return { "matches": matches }
+async def predict_person(request: FindPersonRequest):
+    """Search requisition for person of interest in a video or stream"""
+    logger.info("Starting person search")
+    logger.debug(f"Request: {request.video} and {request.person}")
+
+
+    #try:
+        #matches = predict_person_on_stream(person.embedding, video.path)
+        #logger.info(f"Found {len(matches)} matches")
+        #logger.debug(f"Matches: {matches}")
+        #return {"matches": matches}
+
+    #except Exception as e:
+        #logger.error(f"Error during prediction: {str(e)}", exc_info=True)
+        #raise HTTPException(status_code=500, detail=str(e))

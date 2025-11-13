@@ -1,10 +1,8 @@
 import asyncio
 import logging
 import time
-from typing import Dict, Optional
 
 import cv2
-from fastapi import WebSocket
 
 from src._lib.base64_decoder import decode_base64_frame
 from src.application.use_cases.predict_person import predict_person_on_stream
