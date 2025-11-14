@@ -1,5 +1,6 @@
 import logging
 import os
+import base64
 
 import numpy as np
 from src._lib.decrypt import decrypt_embedding
@@ -83,15 +84,6 @@ def predict_person_on_stream(chosen_person, stream):
             }
             matches.append(match)
 
-    all_distances = [compute_euclidean_distance(decrypted_embedding, enc) for enc in encoded_batch]
-
-    if all_distances:
-        logger.info(f"Distance stats - Min: {min(all_distances):.3f}, "
-                   f"Max: {max(all_distances):.3f}, "
-                   f"Mean: {np.mean(all_distances):.3f}, "
-                   f"Matches below {0.6}: {sum(1 for d in all_distances if d < 0.6)}")
-
-    logger.info(f"Found {len(matches)} matches across {len(set(info['frame_number'] for info in all_frame_info))} frames")
     return matches
 
 def format_timestamp(seconds: float) -> str:

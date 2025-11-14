@@ -31,11 +31,9 @@ async def upload_person_image(request: ImageModel):
             "status": "success",
             "method": "multi_frame"
         }
-
-
     except Exception as e:
-        logging.error(f"Error processing image: {str(e)}")
-        raise HTTPException(status_code=422, detail=f"Failed to process image: {str(e)}")
+        logging.error("Error processing image: %s", str(e))
+        raise HTTPException(status_code=422, detail=f"Failed to process image: {str(e)}") from e
 
 @router.post("/find")
 async def predict_person(request: FindPersonRequest):

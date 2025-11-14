@@ -13,7 +13,7 @@ def create_person_embedding(file):
         ValueError: if no person is detected or encoding fails
         Exception: in case the AI cannot process the frame
     Returns:
-        bytes: Encrypted embedding if successful
+        str: Encrypted embedding if successful (base64 encoded)
     """
     encode = OSNetEncoder()
     person_bbox_list = predict(file)
@@ -31,7 +31,7 @@ def create_person_embedding(file):
 
         encrypted_embedding = encrypt_embedding(encoding)
 
-        return base64.b64encode(encrypted_embedding).decode('utf-8')
+        return encrypted_embedding
 
     except Exception as e:
         logging.error(f"Error during encoding: {str(e)}")
