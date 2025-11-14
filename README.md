@@ -78,6 +78,10 @@ pip install -r requirements.txt
 ### 5. **Configure Environment Variables**
 
 - Copy `.env.example` to `.env` and fill in the required values (paths, keys, etc.).
+- Create an Encryption Key with 
+```bash
+python src/scripts/make_key.py
+```
 - Copy `.env.osnet.example` to `.env.osnet` and fill in the required values (paths, keys, etc.).
 - Copy `.env.yolo.example` to `.env.yolo` and fill in the required values (paths, keys, etc.).
 - If you don't have a model, change YOLO_MODEL_PATH to yolov11n.pt only, as in YOLO_MODEL_PATH=yolov11n.pt
