@@ -110,7 +110,7 @@ uvicorn main:app --host 0.0.0.0 --port 5000
 | Endpoint              | Method | Description                                      |
 |-----------------------|--------|--------------------------------------------------|
 | `/upload-embedding`   | POST   | Upload image, get encrypted person embedding      |
-| `/find/:personId`     | POST   | Search for person in uploaded video           |
+| `/find`     | POST   | Search for person in uploaded video           |
 | `/video-stream`       | WS     | Real-time person search via WebSocket             |
 
 ---
