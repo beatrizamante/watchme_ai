@@ -87,9 +87,8 @@ The encryption key is used to secure person embeddings. Generate a secure key:
    import secrets
 
    # Generate a 256-bit key
-   key = secrets.token_bytes(32)
-   key_b64 = base64.b64encode(key).decode()
-   print(f"ENCRYPTION_KEY={key_b64}")
+   python src/scripts/make_key.py
+   #Copy terminal key
 
 Deployment Configuration
 -------------------------
