@@ -18,7 +18,6 @@ This repository contains the AI backend for the WatchMe project, providing perso
 
 ```
 watchme_ai/
-├── deep-person-reid/        # OSNet source (torchreid)
 ├── src/
 │   ├── infrastructure/
 │   │   ├── yolo/            # YOLO training, inference, scripts
@@ -27,6 +26,8 @@ watchme_ai/
 │   ├── interface/
 │   │   ├── http/            # FastAPI HTTP handlers and server
 │   │   ├── websocket/       # WebSocket protocol handlers
+├── .env.osnet               # OSNet Training Environment variables
+├── .env.yolo                # YOLO Training Environment variables
 ├── .env                     # Environment variables
 ├── requirements.txt         # Python dependencies
 └── README.md                # Project documentation
