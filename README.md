@@ -78,17 +78,19 @@ pip install -r requirements.txt
 ### 5. **Configure Environment Variables**
 
 - Copy `.env.example` to `.env` and fill in the required values (paths, keys, etc.).
+- Copy `.env.osnet.example` to `.env.osnet` and fill in the required values (paths, keys, etc.).
+- Copy `.env.yolo.example` to `.env.yolo` and fill in the required values (paths, keys, etc.).
 - If you don't have a model, change YOLO_MODEL_PATH to yolov11n.pt only, as in YOLO_MODEL_PATH=yolov11n.pt
 - Example:
   ```
-  YOLO_MODEL_PATH=src/infrastructure/yolo/client/best.pt
-  OSNET_SAVE_DIR=src/infrastructure/osnet/client
+  YOLO_MODEL_PATH=src/infrastructure/yolo/client/best.pt #On .env.yolo
+  OSNET_SAVE_DIR=src/infrastructure/osnet/client         #On .env.osnet
   ENCRYPTION_KEY=your_base64_key_here
   ```
 
 ### 6. **Prepare Datasets**
 
-- Download and place your datasets in the specified folders (see `.env` and config).
+- Download and place your datasets in the specified folders (see `.env.yolo/osnet` and config).
 - Example: `src/dataset/yolo/`, `src/dataset/osnet/`
 
 ---
@@ -111,7 +113,7 @@ uvicorn main:app --host 0.0.0.0 --port 5000
 | Endpoint              | Method | Description                                      |
 |-----------------------|--------|--------------------------------------------------|
 | `/upload-embedding`   | POST   | Upload image, get encrypted person embedding      |
-| `/find`     | POST   | Search for person in uploaded video           |
+| `/find`               | POST   | Search for person in uploaded video           |
 | `/video-stream`       | WS     | Real-time person search via WebSocket             |
 
 ---
