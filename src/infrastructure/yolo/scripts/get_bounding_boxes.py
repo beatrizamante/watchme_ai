@@ -40,10 +40,13 @@ def get_bounding_boxes(
                 if x2 > x1 and y2 > y1:
                     cropped_person = original_image[y1:y2, x1:x2]
 
+                    w = float(x2 - x1)
+                    h = float(y2 - y1)
+                    x = float(x1)
+                    y = float(y1)
                     detection = {
-                        'bbox': [float(x1), float(y1), float(x2), float(y2)],
+                        'bbox': [x, y, w, h],
                         'cropped_image': cropped_person,
-                        'crop_coordinates': [x1, y1, x2, y2]
                     }
 
                     if frame_info:
