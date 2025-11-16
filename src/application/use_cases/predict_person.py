@@ -4,12 +4,12 @@ import base64
 
 import numpy as np
 from src._lib.decrypt import decrypt_embedding
-from src.infrastructure.osnet.core.encode import OSNetEncoder
+from src.infrastructure.osnet.core.encode import get_encoder
 from src.infrastructure.yolo.core.predict import predict, predict_video, predict_single_frame
 from src.scripts.calculate_distance import compute_euclidean_distance
 
 logger = logging.getLogger("watchmeai")
-encoder = OSNetEncoder()
+encoder = get_encoder()
 
 def predict_person_on_stream(chosen_person, stream):
     """
@@ -80,7 +80,7 @@ def predict_person_on_stream(chosen_person, stream):
 
         logger.debug(f"Distance: {distance} at frame {all_frame_info[i]['frame_number']}")
 
-        if distance < 1.2:
+        if distance < 0.6:
             match = {
                 "bbox": all_bboxes[i],
                 "bbox_format": "xyxy",
