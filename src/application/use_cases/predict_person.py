@@ -49,7 +49,11 @@ def predict_person_on_stream(chosen_person, stream):
 
             frame_info = {
                 'frame_number': detection.get('frame_number', 0),
-                'timestamp': detection.get('timestamp', 0.0)
+                'timestamp': detection.get('timestamp', 0.0),
+                'coordinate_system': detection.get('coordinate_system', {}),
+                'crop_info': detection.get('crop_info', {}),
+                'confidence': detection.get('confidence', 1.0),
+                'detection_id': detection.get('detection_id', 0)
             }
             all_frame_info.append(frame_info)
 
@@ -71,13 +75,19 @@ def predict_person_on_stream(chosen_person, stream):
 
     for i, encoded_person in enumerate(encoded_batch):
         distance = compute_euclidean_distance(decrypted_embedding, encoded_person)
+
+        distance = float(distance)
+
         logger.debug(f"Distance: {distance} at frame {all_frame_info[i]['frame_number']}")
 
-        if distance < 0.4:
+        if distance < 1.2:
             match = {
                 "bbox": all_bboxes[i],
-                "distance": float(distance),
-                "confidence": float(max(0, 1.0 - distance/0.6)),
+                "bbox_format": "xyxy",
+                "coordinate_info": all_frame_info[i]['coordinate_system'],
+                "crop_info": all_frame_info[i]['crop_info'],
+                "confidence": all_frame_info[i]['confidence'],
+                "distance": distance,
                 "frame_number": all_frame_info[i]['frame_number'],
                 "timestamp": all_frame_info[i]['timestamp'],
                 "time_formatted": format_timestamp(all_frame_info[i]['timestamp'])

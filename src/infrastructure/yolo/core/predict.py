@@ -61,9 +61,15 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
     if not cap.isOpened():
         raise RuntimeError(f"Could not open video file: {video_path}")
 
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    print(f"Video info: {video_width}x{video_height}, {fps:.2f} FPS, {total_frames} frames")
+
     results = []
     frame_count = 0
-    fps = cap.get(cv2.CAP_PROP_FPS)
 
     try:
         while True:
@@ -73,6 +79,11 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
 
             if frame_count % frame_skip == 0:
                 try:
+                    actual_h, actual_w = frame.shape[:2]
+
+                    if actual_w != video_width or actual_h != video_height:
+                        print(f"Frame size mismatch! Video: {video_width}x{video_height}, Frame: {actual_w}x{actual_h}")
+
                     frame_results = model.predict(
                         frame,
                         conf=0.28,
@@ -81,8 +92,12 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
                     )
 
                     frame_info = {
-                        'frame_number': frame_count,
-                        'timestamp': frame_count / fps
+                        'frame_number': int(frame_count),              # Python int
+                        'timestamp': float(frame_count / fps),         # Python float
+                        'original_video_size': [int(video_width), int(video_height)],  # Python ints
+                        'processed_frame_size': [int(actual_w), int(actual_h)],        # Python ints
+                        'scale_factor_x': float(actual_w / video_width),               # Python float
+                        'scale_factor_y': float(actual_h / video_height)               # Python float
                     }
 
                     if hasattr(frame_results, '__iter__') and not isinstance(frame_results, (str, bytes)):
@@ -90,10 +105,16 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
                     else:
                         results_list = [frame_results]
 
-
                     frame_detections = get_bounding_boxes([frame], results_list, frame_info)
 
                     if frame_detections:
+                        for frame_detection in frame_detections:
+                            frame_detection['video_metadata'] = {
+                                'original_video_size': [video_width, video_height],
+                                'fps': fps,
+                                'total_frames': total_frames,
+                                'video_path': video_path
+                            }
                         results.extend(frame_detections)
 
                 except Exception as frame_error:
