@@ -2,7 +2,7 @@ import base64
 import logging
 import numpy as np
 from src._lib.encrypt import encrypt_embedding
-from src.infrastructure.osnet.core.encode import OSNetEncoder
+from src.infrastructure.osnet.core.encode import get_encoder
 from src.infrastructure.yolo.core.predict import predict
 
 def create_person_embedding(file):
@@ -15,7 +15,7 @@ def create_person_embedding(file):
     Returns:
         str: Encrypted embedding if successful (base64 encoded)
     """
-    encode = OSNetEncoder()
+    encode = get_encoder()
     person_bbox_list = predict(file)
 
     if not person_bbox_list or not person_bbox_list[0]['detections']:
