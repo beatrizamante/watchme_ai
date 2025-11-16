@@ -13,7 +13,6 @@ async def handle_start_tracking(session_id: str, data: dict, manager):  # Add ma
     video_source = data.get("video_source", 0)
     fps_limit = data.get("fps_limit", 10)
 
-    # Store session info
     manager.tracking_sessions[session_id] = {
         "person_embed": person_embed,
         "video_source": video_source,
@@ -21,11 +20,9 @@ async def handle_start_tracking(session_id: str, data: dict, manager):  # Add ma
         "active": True
     }
 
-    # Cancel existing task if any
     if session_id in manager.processing_tasks:
         manager.processing_tasks[session_id].cancel()
 
-    # Start video processing task
     task = asyncio.create_task(process_video_feed(session_id, manager))
     manager.processing_tasks[session_id] = task
 
