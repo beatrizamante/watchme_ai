@@ -83,7 +83,7 @@ def predict_person_on_stream(chosen_person, stream):
         distance = float(distance)
         logger.debug(f"Distance: {distance} at frame {all_frame_info[i]['frame_number']}")
 
-        if distance < 0.6:
+        if distance < 0.2:
             match = {
                 "bbox": all_bboxes[i],
                 "bbox_format": "xyxy",

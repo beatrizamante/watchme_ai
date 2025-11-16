@@ -5,14 +5,14 @@ import cv2
 from fastapi import APIRouter, HTTPException
 from src.application.use_cases.create_person_embedding import create_person_embedding
 from src.application.use_cases.predict_person import predict_person_on_stream
-from src.domain.DetectionModel import FindPersonRequest
-from src.domain.Image import ImageModel
+from src.domain.Detection import FindPersonRequest
+from src.domain.Image import Image
 
 logger = logging.getLogger("watchmeai")
 router = APIRouter()
 
 @router.post("/upload-embedding")
-async def upload_person_image(request: ImageModel):
+async def upload_person_image(request: Image):
     """
     Upload an image and get the person embedding.
     """
