@@ -6,7 +6,7 @@ import numpy as np
 from src._lib.decrypt import decrypt_embedding
 from src.infrastructure.osnet.core.encode import get_encoder
 from src.infrastructure.yolo.core.predict import predict, predict_video, predict_single_frame
-from src.scripts.calculate_distance import compute_euclidean_distance
+from src.scripts.calculate_distance import compute_batch_distances, compute_euclidean_distance
 
 logger = logging.getLogger("watchmeai")
 encoder = get_encoder()
@@ -65,6 +65,10 @@ def predict_person_on_stream(chosen_person, stream):
     encoded_batch = encoder.encode_batch(all_cropped_images)
     matches = []
 
+    if decrypted_embedding.shape != (512,):
+        logger.error(f"Invalid decrypted embedding shape: {decrypted_embedding.shape}")
+        return []
+
     if not encoded_batch:
         logger.warning("OSNet encoding returned empty batch")
         return []
@@ -73,11 +77,10 @@ def predict_person_on_stream(chosen_person, stream):
         logger.error(f"Batch size mismatch: {len(encoded_batch)} vs {len(all_cropped_images)}")
         return []
 
-    for i, encoded_person in enumerate(encoded_batch):
-        distance = compute_euclidean_distance(decrypted_embedding, encoded_person)
+    distances = compute_batch_distances(decrypted_embedding, np.array(encoded_batch))
 
+    for i, distance in enumerate(distances):
         distance = float(distance)
-
         logger.debug(f"Distance: {distance} at frame {all_frame_info[i]['frame_number']}")
 
         if distance < 0.6:
