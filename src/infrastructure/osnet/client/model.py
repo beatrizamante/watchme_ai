@@ -51,7 +51,7 @@ class OSNetModel:
             width=self.settings.OSNET_IMG_WIDTH,
             batch_size_train=self.settings.OSNET_BATCH_SIZE,
             batch_size_test=self.settings.OSNET_BATCH_SIZE,
-            transforms=['random_flip', 'random_crop', 'random_erase', 'color_jitter'],
+            transforms=['random_flip', 'random_crop', 'random_erase', 'color_jitter'], # type: ignore
             num_instances=self.settings.OSNET_NUM_INSTANCES,
             train_sampler='RandomIdentitySampler',
             seq_len=8,

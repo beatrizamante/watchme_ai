@@ -74,7 +74,11 @@ async def upload_person_image(
         raise HTTPException(status_code=422, detail={"Failed to process image: %s", str(e)}) from e
 
 @router.post("/find")
-async def predict_person(request: FindPersonRequest, encoder: OSNetEncoder = Depends(get_osnet_encoder), decryption_service: DecryptionService = Depends(get_decryption_service) ):
+async def predict_person(
+    request: FindPersonRequest,
+    encoder: OSNetEncoder = Depends(get_osnet_encoder),
+    decryption_service: DecryptionService = Depends(get_decryption_service)
+):
     """Search requisition for person of interest in a video or stream"""
     logger.info("Starting person search")
 
