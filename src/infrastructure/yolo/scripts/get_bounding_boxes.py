@@ -34,7 +34,7 @@ def get_bounding_boxes(
         if result.boxes is not None:
             for box_idx, box in enumerate(result.boxes):
                 coords = box.xyxy[0].cpu().numpy()
-                x1, y1, x2, y2 = [int(coord) for coord in coords]  # Convert to Python int
+                x1, y1, x2, y2 = [int(coord) for coord in coords]
 
                 x1, y1 = max(0, x1), max(0, y1)
                 x2, y2 = min(orig_w, x2), min(orig_h, y2)

@@ -1,17 +1,15 @@
 import logging
 import os
-import base64
 
 import numpy as np
-from src._lib.decrypt import decrypt_embedding
-from src.infrastructure.osnet.core.encode import get_encoder
+from src._lib.decrypt import DecryptionService
+from src.infrastructure.osnet.core.encode import OSNetEncoder
 from src.infrastructure.yolo.core.predict import predict, predict_video, predict_single_frame
-from src.scripts.calculate_distance import compute_batch_distances, compute_euclidean_distance
+from src.scripts.calculate_distance import compute_batch_distances
 
 logger = logging.getLogger("watchmeai")
-encoder = get_encoder()
 
-def predict_person_on_stream(chosen_person, stream):
+def predict_person_on_stream(chosen_person, stream, decryption_service: DecryptionService, encoder: OSNetEncoder):
     """
     Compare the chosen person's embedding to all detected people in the video stream.
     Args:
@@ -20,7 +18,7 @@ def predict_person_on_stream(chosen_person, stream):
     Returns:
         List of matching bounding boxes with timestamps.
     """
-    logger.info(f"Processing stream: {type(stream)} - {stream if isinstance(stream, str) else 'numpy array'}")
+    logger.info("Processing stream: %s - %s", type(stream), stream if isinstance(stream, str) else "numpy array")
 
     if isinstance(stream, str):
         if os.path.exists(stream):
@@ -61,27 +59,23 @@ def predict_person_on_stream(chosen_person, stream):
         logger.info("No people detected")
         return []
 
-    decrypted_embedding = decrypt_embedding(chosen_person, shape=(512,), dtype='float32')
+    decrypted_embedding = decryption_service.decrypt_embedding(chosen_person, shape=(512,), dtype='float32')
     encoded_batch = encoder.encode_batch(all_cropped_images)
     matches = []
-
-    if decrypted_embedding.shape != (512,):
-        logger.error(f"Invalid decrypted embedding shape: {decrypted_embedding.shape}")
-        return []
 
     if not encoded_batch:
         logger.warning("OSNet encoding returned empty batch")
         return []
 
     if len(encoded_batch) != len(all_cropped_images):
-        logger.error(f"Batch size mismatch: {len(encoded_batch)} vs {len(all_cropped_images)}")
+        logger.error("Batch size mismatch: %d vs %d", len(encoded_batch), len(all_cropped_images))
         return []
 
     distances = compute_batch_distances(decrypted_embedding, np.array(encoded_batch))
 
     for i, distance in enumerate(distances):
         distance = float(distance)
-        logger.debug(f"Distance: {distance} at frame {all_frame_info[i]['frame_number']}")
+        logger.debug("Distance: %f at frame %d", distance, all_frame_info[i]['frame_number'])
 
         if distance < 0.38:
             match = {

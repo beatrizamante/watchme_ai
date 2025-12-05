@@ -2,6 +2,15 @@ import logging
 import uvicorn
 
 def make_server():
+    """
+    Configures and returns a Uvicorn server instance for the FastAPI application.
+
+    The server is set up to run on host '0.0.0.0' and port 5000, with debug-level logging and colored output.
+    Logs the configuration process using the 'watchmeai' logger.
+
+    Returns:
+        uvicorn.Server: A configured Uvicorn server instance ready to be started.
+    """
     logger = logging.getLogger("watchmeai")
     logger.info("Configuring server...")
 
