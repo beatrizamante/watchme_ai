@@ -92,12 +92,12 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
                     )
 
                     frame_info = {
-                        'frame_number': int(frame_count),              # Python int
-                        'timestamp': float(frame_count / fps),         # Python float
-                        'original_video_size': [int(video_width), int(video_height)],  # Python ints
-                        'processed_frame_size': [int(actual_w), int(actual_h)],        # Python ints
-                        'scale_factor_x': float(actual_w / video_width),               # Python float
-                        'scale_factor_y': float(actual_h / video_height)               # Python float
+                        'frame_number': int(frame_count),
+                        'timestamp': float(frame_count / fps),
+                        'original_video_size': [int(video_width), int(video_height)],
+                        'processed_frame_size': [int(actual_w), int(actual_h)],
+                        'scale_factor_x': float(actual_w / video_width),
+                        'scale_factor_y': float(actual_h / video_height)
                     }
 
                     if hasattr(frame_results, '__iter__') and not isinstance(frame_results, (str, bytes)):
