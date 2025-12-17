@@ -1,6 +1,7 @@
 """Module for YOLO object detection and prediction."""
 
 from typing import Any, Dict, List, Union
+import os
 
 import cv2
 import numpy as np
@@ -53,7 +54,6 @@ def predict_video(video_path: str, frame_skip: int = 30) -> List[Dict[str, Any]]
     if not video_path.lower().endswith(('.mp4', '.avi', '.mov', '.mkv', '.wmv')):
         raise ValueError(f"Unsupported video format: {video_path}")
 
-    import os
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
