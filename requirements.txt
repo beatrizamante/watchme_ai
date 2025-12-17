@@ -10,6 +10,7 @@ tqdm
 fastapi
 sphinx
 sphinx_rtd_theme
+dependency-injector
 uvicorn
 torch
 torchvision

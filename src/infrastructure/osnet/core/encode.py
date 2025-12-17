@@ -1,7 +1,6 @@
 """Module for encoding images using trained OSNet models."""
 
 from pathlib import Path
-import threading
 
 import numpy as np
 import torch
@@ -13,24 +12,12 @@ from src.infrastructure.osnet.scripts.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.scripts.transformers.transformers import \
     create_transforms, preprocess_image
 
-_global_encoder = None
-_encoder_lock = threading.Lock()
-
-def get_encoder():
-    """Get the global encoder instance"""
-    global _global_encoder
-    if _global_encoder is None:
-        with _encoder_lock:
-            if _global_encoder is None:
-                _global_encoder = OSNetEncoder()
-    return _global_encoder
-
 class OSNetEncoder:
     """Handle OSNet encoding operations for person re-identification."""
 
-    def __init__(self):
+    def __init__(self, config: OSNetSettings | None = None):
         self.osnet_client = OSNetModel()
-        self.settings = OSNetSettings()
+        self.settings = config or OSNetSettings()
         self.model = self.osnet_client.create_osnet_model(
             num_classes=self.settings.OSNET_NUM_CLASSES
         )

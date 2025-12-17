@@ -13,6 +13,7 @@ src/dataset/osnet/labels/*
 runs/
 logs/
 deep-person-reid/
+logs/
 
 *.rar
 *.zip

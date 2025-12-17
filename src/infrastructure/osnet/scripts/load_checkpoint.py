@@ -58,7 +58,7 @@ def load_checkpoint(weights_path, device, model):
                             torch.nn.init.constant_(param, 1.0)
                     elif 'bias' in name:
                         torch.nn.init.constant_(param, 0.0)
-                    print(f"🔧 Deterministically initialized: {name} with shape {param.shape}")
+                    print(f"Deterministically initialized: {name} with shape {param.shape}")
 
         for name, buffer in model.named_buffers():
             if name in missing_keys:
@@ -66,7 +66,7 @@ def load_checkpoint(weights_path, device, model):
                     if 'running_mean' in name or 'running_var' in name:
                         if 'running_mean' in name:
                             torch.nn.init.constant_(buffer, 0.0)
-                        else:  # running_var
+                        else:
                             torch.nn.init.constant_(buffer, 1.0)
                         print(f"Deterministically initialized buffer: {name}")
 
