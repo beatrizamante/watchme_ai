@@ -14,7 +14,12 @@ app = FastAPI()
 app.include_router(person_router)
 app.include_router(ws_router)
 
-if __name__ == "__main__":
+def run():
+    """Entry point for uvx / uv tool run."""
     logger.info("Starting WatchMe AI Backend...")
     server = make_server()
     server.run()
+
+
+if __name__ == "__main__":
+    run()

@@ -47,7 +47,7 @@ class ContainerSingleton:
         """Get the singleton container instance"""
         if cls._instance is None:
             cls._instance = Container()
-        return cls._instance
+        return cls._instance  # type: ignore
 
 
 def get_container() -> Container:
