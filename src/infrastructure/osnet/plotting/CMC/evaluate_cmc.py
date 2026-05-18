@@ -4,10 +4,10 @@ Script to calculate Cumulative Matching Characteristic (CMC) metrics for OSNet m
 CMC measures the probability that the correct match appears in the top-k retrieved results.
 """
 
+from src.infrastructure.osnet.model.model import OSNetModel
 import torch
 
 from config import OSNetSettings
-from src.infrastructure.osnet.client.model import OSNetModel
 from src.infrastructure.osnet.plotting.CMC.calculate_cmc import calculate_cmc
 from src.infrastructure.osnet.plotting.shared.extract_features import extract_features
 from src.infrastructure.osnet.scripts.load_checkpoint import load_checkpoint

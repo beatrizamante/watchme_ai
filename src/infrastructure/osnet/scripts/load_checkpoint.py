@@ -1,17 +1,11 @@
 import torch
 import torch.backends.cudnn
-import numpy as np
 
 def load_checkpoint(weights_path, device, model):
     """
-    Load a pre-trained model checkpoint with deterministic initialization for missing keys.
-    Ensures consistent embeddings across server restarts.
+    Load a pre-trained model checkpoint, skipping classifier/fc layers.
+    Consistency between restarts is guaranteed by loading the same checkpoint + model.eval().
     """
-
-    np.random.seed(42)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(42)
-        torch.cuda.manual_seed_all(42)
 
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
@@ -39,36 +33,7 @@ def load_checkpoint(weights_path, device, model):
 
     print(f"Kept {len(filtered_state_dict)} keys, skipped {len(skipped_keys)} keys")
 
-    missing_keys, unexpected_keys = model.load_state_dict(filtered_state_dict, strict=False)
-
-    if missing_keys:
-        print(f"Missing keys (initializing deterministically): {missing_keys}")
-
-        torch.manual_seed(42)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed(42)
-
-        for name, param in model.named_parameters():
-            if name in missing_keys:
-                with torch.no_grad():
-                    if 'weight' in name:
-                        if len(param.shape) >= 2:
-                            torch.nn.init.xavier_uniform_(param, gain=1.0)
-                        else:
-                            torch.nn.init.constant_(param, 1.0)
-                    elif 'bias' in name:
-                        torch.nn.init.constant_(param, 0.0)
-                    print(f"Deterministically initialized: {name} with shape {param.shape}")
-
-        for name, buffer in model.named_buffers():
-            if name in missing_keys:
-                with torch.no_grad():
-                    if 'running_mean' in name or 'running_var' in name:
-                        if 'running_mean' in name:
-                            torch.nn.init.constant_(buffer, 0.0)
-                        else:
-                            torch.nn.init.constant_(buffer, 1.0)
-                        print(f"Deterministically initialized buffer: {name}")
+    _, unexpected_keys = model.load_state_dict(filtered_state_dict, strict=False)
 
     if unexpected_keys:
         print(f"Unexpected keys: {unexpected_keys}")
@@ -76,5 +41,5 @@ def load_checkpoint(weights_path, device, model):
     model.eval()
     model = model.to(device)
 
-    print(" Checkpoint loaded with deterministic initialization")
+    print("Checkpoint loaded successfully")
     return model

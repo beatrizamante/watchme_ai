@@ -5,7 +5,7 @@ from pathlib import Path
 import torchreid
 
 from config import OSNetSettings
-from src.infrastructure.osnet.client.model import OSNetModel
+from src.infrastructure.osnet.model.model import OSNetModel
 
 class OSNetTrainer:
     """Handle OSNet training operations."""
@@ -85,6 +85,17 @@ class OSNetTrainer:
             margin=self.settings.OSNET_MARGIN,
         )
 
+        captured_metrics = {'rank1': 0.0, 'mAP': 0.0}
+        original_evaluate = engine._evaluate
+
+        def capturing_evaluate(*args, **kwargs):
+            rank1, mAP = original_evaluate(*args, **kwargs)
+            captured_metrics['rank1'] = rank1
+            captured_metrics['mAP'] = mAP
+            return rank1, mAP
+
+        engine._evaluate = capturing_evaluate
+
         engine.run(
             save_dir=self.settings.OSNET_SAVE_DIR,
             max_epoch=max_epoch,
@@ -98,12 +109,27 @@ class OSNetTrainer:
         results = {
             "save_dir": self.settings.OSNET_SAVE_DIR,
             "final_epoch": max_epoch,
+            "rank1": captured_metrics['rank1'],
+            "mAP": captured_metrics['mAP'],
         }
 
         return results
 
     def get_best_model_path(self):
-        """Get path to the best saved model."""
-        save_dir = Path(self.settings.OSNET_SAVE_DIR)
-        model_path = save_dir / self.settings.OSNET_MODEL_NAME
-        return str(model_path) if model_path.exists() else None
+        """Get path to the best saved model checkpoint.
+
+        torchreid saves to {save_dir}/model/model.pth.tar-{epoch} and
+        copies the best as {save_dir}/model/model-best.pth.tar.
+        """
+        model_dir = Path(self.settings.OSNET_SAVE_DIR) / "model"
+
+        best_path = model_dir / "model-best.pth.tar"
+        if best_path.exists():
+            return str(best_path)
+
+        checkpoints = list(model_dir.glob("model.pth.tar-*"))
+        if checkpoints:
+            checkpoints.sort(key=lambda p: int(p.name.rsplit("-", 1)[-1]))
+            return str(checkpoints[-1])
+
+        return None
