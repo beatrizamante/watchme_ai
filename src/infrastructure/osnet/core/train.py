@@ -5,7 +5,7 @@ from pathlib import Path
 import torchreid
 
 from config import OSNetSettings
-from src.infrastructure.osnet.client.model import OSNetModel
+from src.infrastructure.osnet.model.model import OSNetModel
 
 class OSNetTrainer:
     """Handle OSNet training operations."""
@@ -116,7 +116,20 @@ class OSNetTrainer:
         return results
 
     def get_best_model_path(self):
-        """Get path to the best saved model."""
-        save_dir = Path(self.settings.OSNET_SAVE_DIR)
-        model_path = save_dir / self.settings.OSNET_MODEL_NAME
-        return str(model_path) if model_path.exists() else None
+        """Get path to the best saved model checkpoint.
+
+        torchreid saves to {save_dir}/model/model.pth.tar-{epoch} and
+        copies the best as {save_dir}/model/model-best.pth.tar.
+        """
+        model_dir = Path(self.settings.OSNET_SAVE_DIR) / "model"
+
+        best_path = model_dir / "model-best.pth.tar"
+        if best_path.exists():
+            return str(best_path)
+
+        checkpoints = list(model_dir.glob("model.pth.tar-*"))
+        if checkpoints:
+            checkpoints.sort(key=lambda p: int(p.name.rsplit("-", 1)[-1]))
+            return str(checkpoints[-1])
+
+        return None

@@ -3,11 +3,11 @@
 from pathlib import Path
 
 import numpy as np
+from src.infrastructure.osnet.model.model import OSNetModel
 import torch
 import torch.nn.functional as F
 
 from config import OSNetSettings
-from src.infrastructure.osnet.client.model import OSNetModel
 from src.infrastructure.osnet.scripts.load_checkpoint import load_checkpoint
 from src.infrastructure.osnet.scripts.transformers.transformers import \
     create_transforms, preprocess_image

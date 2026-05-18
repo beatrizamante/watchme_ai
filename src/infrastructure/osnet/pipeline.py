@@ -1,6 +1,5 @@
 """OSNet training pipeline for person re-identification."""
 
-from pathlib import Path
 from config import OSNetSettings
 from src.infrastructure.osnet.core.train import OSNetTrainer
 
@@ -20,12 +19,8 @@ class OSNetPipeline:
 
     def _check_for_baseline_weights(self):
         """Check if there's an existing baseline model to resume from."""
-        baseline_dir = Path(self.settings.OSNET_SAVE_DIR) / "baseline_train"
-        best_weights_path = baseline_dir / "model.pth.tar"
-
-        if best_weights_path.exists():
-            return True, str(best_weights_path)
-        return False, None
+        path = self.trainer.get_best_model_path() # type: ignore
+        return (True, path) if path else (False, None)
 
     def run(self):
         """
