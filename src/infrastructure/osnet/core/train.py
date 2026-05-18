@@ -85,6 +85,17 @@ class OSNetTrainer:
             margin=self.settings.OSNET_MARGIN,
         )
 
+        captured_metrics = {'rank1': 0.0, 'mAP': 0.0}
+        original_evaluate = engine._evaluate
+
+        def capturing_evaluate(*args, **kwargs):
+            rank1, mAP = original_evaluate(*args, **kwargs)
+            captured_metrics['rank1'] = rank1
+            captured_metrics['mAP'] = mAP
+            return rank1, mAP
+
+        engine._evaluate = capturing_evaluate
+
         engine.run(
             save_dir=self.settings.OSNET_SAVE_DIR,
             max_epoch=max_epoch,
@@ -98,6 +109,8 @@ class OSNetTrainer:
         results = {
             "save_dir": self.settings.OSNET_SAVE_DIR,
             "final_epoch": max_epoch,
+            "rank1": captured_metrics['rank1'],
+            "mAP": captured_metrics['mAP'],
         }
 
         return results
