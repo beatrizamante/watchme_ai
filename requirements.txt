@@ -5,7 +5,6 @@ ultralytics
 ray[tune]
 wandb
 pycryptodome
-ray
 tqdm
 fastapi
 sphinx

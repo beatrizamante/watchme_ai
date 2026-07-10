@@ -29,14 +29,15 @@ class OSNetGradCAM:
     Args:
         encoder: A fully initialised :class:`OSNetEncoder` instance.
         target_layer_name: Dot-separated attribute path to the convolutional
-            layer to hook.  Defaults to ``"conv4"``, the last spatial feature
-            block before global average pooling in ``osnet_ibn_x1_0``.
+            layer to hook.  Defaults to ``"conv5"``, the last 1×1 conv before
+            global average pooling in ``osnet_ibn_x1_0`` — highest-level
+            spatial features before embedding aggregation.
     """
 
     def __init__(
         self,
         encoder: "OSNetEncoder",
-        target_layer_name: str = "conv4",
+        target_layer_name: str = "conv5",
     ) -> None:
         self.encoder = encoder
         self.model = encoder.model
@@ -54,7 +55,7 @@ class OSNetGradCAM:
             layer = getattr(layer, part)
         return layer
 
-    def _register_hooks(self) -> tuple[torch.utils.hooks.RemovableHook, torch.utils.hooks.RemovableHook]:
+    def _register_hooks(self) -> tuple[torch.utils.hooks.RemovableHandle, torch.utils.hooks.RemovableHandle]:
         """Attach forward and backward hooks; return handles for later removal."""
 
         def _save_feature_maps(_module, _input, output: torch.Tensor) -> None:
